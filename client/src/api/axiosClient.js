@@ -1,6 +1,10 @@
 import axios from 'axios'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://brand-os-lkr0.onrender.com/api'
+const DEFAULT_API_BASE_URL = 'https://brand-os-lkr0.onrender.com/api'
+const envApiBaseUrl = import.meta.env.VITE_API_BASE_URL || ''
+const API_BASE_URL = envApiBaseUrl.includes('creaters-brand-os.vercel.app')
+  ? DEFAULT_API_BASE_URL
+  : envApiBaseUrl || DEFAULT_API_BASE_URL
 
 const axiosClient = axios.create({
   baseURL: API_BASE_URL,
