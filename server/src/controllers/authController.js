@@ -80,7 +80,8 @@ exports.register = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { password } = req.body;
+    const email = String(req.body.email || '').trim().toLowerCase();
     if (!email || !password) return res.status(400).json({ message: 'Email and password are required' });
 
     const user = await User.findOne({ email }).select('+password +refreshTokens');
@@ -141,7 +142,7 @@ exports.logout = async (req, res, next) => {
 
 exports.forgotPassword = async (req, res, next) => {
   try {
-    const { email } = req.body;
+    const email = String(req.body.email || '').trim().toLowerCase();
     const user = await User.findOne({ email });
     if (!user) return res.json({ message: 'If that email exists, a reset link was sent.' });
 
