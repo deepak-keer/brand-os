@@ -77,7 +77,7 @@ FROM_EMAIL=noreply@brandos.app
 
 ### client/.env
 ```env
-VITE_API_BASE_URL=https://brand-os-lkr0.onrender.com/api
+VITE_API_BASE_URL=https://positive-rebirth-production-c5b3.up.railway.app/api
 ```
 
 ## Production Deployment
@@ -87,9 +87,9 @@ VITE_API_BASE_URL=https://brand-os-lkr0.onrender.com/api
 docker-compose up --build -d
 ```
 
-### Manual (Render + Vercel)
-1. Deploy `/server` to **Render** (set all env vars)
-2. Deploy `/client` to **Vercel** (set `VITE_API_BASE_URL=https://brand-os-lkr0.onrender.com/api`)
+### Manual (Railway + Vercel)
+1. Deploy `/server` to **Railway** (set all env vars)
+2. Deploy `/client` to **Vercel** (set `VITE_API_BASE_URL=https://positive-rebirth-production-c5b3.up.railway.app/api`)
 
 ## API Reference
 
