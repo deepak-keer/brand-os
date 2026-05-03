@@ -1,7 +1,9 @@
 import axios from 'axios'
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://brand-os-lkr0.onrender.com/api'
+
 const axiosClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+  baseURL: API_BASE_URL,
 })
 
 let isRefreshing = false
@@ -32,7 +34,7 @@ axiosClient.interceptors.response.use(
       isRefreshing = true
       const refreshToken = localStorage.getItem('refreshToken')
       try {
-        const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/auth/refresh`, { refreshToken })
+        const { data } = await axios.post(`${API_BASE_URL}/auth/refresh`, { refreshToken })
         localStorage.setItem('accessToken', data.accessToken)
         localStorage.setItem('refreshToken', data.refreshToken)
         processQueue(null, data.accessToken)
