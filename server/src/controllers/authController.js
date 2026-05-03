@@ -68,11 +68,11 @@ exports.register = async (req, res, next) => {
     // Welcome notification
     await Notification.create({ userId: user._id, type: 'system', title: 'Welcome to Brand OS! 🎉', message: 'Your creator hub is ready. Start by adding your first content idea!', icon: 'logo', link: '/ideas' });
 
-    // Welcome email (non-blocking)
-    try {
-      const tmpl = emailTemplates.welcome(name);
-      await sendEmail({ to: email, ...tmpl });
-    } catch (_) {}
+    // Welcome email (fire-and-log so SMTP issues never block registration)
+    const tmpl = emailTemplates.welcome(name);
+    sendEmail({ to: email, ...tmpl }).catch(err => {
+      console.warn('Welcome email failed:', err.message);
+    });
 
     res.status(201).json({ accessToken, refreshToken, user });
   } catch (err) { next(err); }
