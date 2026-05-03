@@ -65,8 +65,8 @@ GROQ_MODEL=openai/gpt-oss-20b
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_key
 CLOUDINARY_API_SECRET=your_secret
-CLIENT_URL=http://localhost:5173
-LOGO_URL=http://localhost:5173/logo.png
+CLIENT_URL=https://creaters-brand-os.vercel.app
+LOGO_URL=https://creaters-brand-os.vercel.app/logo.png
 NODE_ENV=development
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
@@ -77,7 +77,7 @@ FROM_EMAIL=noreply@brandos.app
 
 ### client/.env
 ```env
-VITE_API_BASE_URL=http://localhost:5000/api
+VITE_API_BASE_URL=https://brand-os-lkr0.onrender.com/api
 ```
 
 ## Production Deployment
@@ -89,7 +89,7 @@ docker-compose up --build -d
 
 ### Manual (Render + Vercel)
 1. Deploy `/server` to **Render** (set all env vars)
-2. Deploy `/client` to **Vercel** (set `VITE_API_BASE_URL` to Render URL)
+2. Deploy `/client` to **Vercel** (set `VITE_API_BASE_URL=https://brand-os-lkr0.onrender.com/api`)
 
 ## API Reference
 
