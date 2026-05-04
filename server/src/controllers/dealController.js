@@ -16,14 +16,14 @@ exports.getDeals = async (req, res, next) => {
 exports.createDeal = async (req, res, next) => {
   try {
     const deal = await Deal.create({ ...req.body, userId: req.user.id, ...(req.body.isPaid ? { paidAt: new Date() } : {}) });
-    await Notification.create({ userId: req.user.id, type: 'deal', title: 'New Deal Added 🤝', message: `Deal with ${deal.brandName} ($${deal.amount.toLocaleString()}) has been added`, icon: '🤝', link: '/deals' });
+    await Notification.create({ userId: req.user.id, type: 'deal', title: 'New deal added', message: `Deal with ${deal.brandName} ($${deal.amount.toLocaleString()}) has been added`, icon: 'handshake', link: '/deals' });
 
     if (deal.status === 'completed') {
-      await sendAchievement({ userId: req.user.id, type: 'deal', title: 'Deal Completed! 💰', message: `${deal.brandName} deal completed — $${deal.amount.toLocaleString()} earned!`, icon: '💰', link: '/income' });
+      await sendAchievement({ userId: req.user.id, type: 'deal', title: 'Deal completed', message: `${deal.brandName} deal completed — $${deal.amount.toLocaleString()} earned!`, icon: 'dollarSign', link: '/income' });
     }
 
     if (deal.isPaid) {
-      await sendAchievement({ userId: req.user.id, type: 'deal', title: 'Payment Received! 💸', message: `${deal.brandName} payment received — $${deal.amount.toLocaleString()} added to your income.`, icon: '💸', link: '/income' });
+      await sendAchievement({ userId: req.user.id, type: 'deal', title: 'Payment received', message: `${deal.brandName} payment received — $${deal.amount.toLocaleString()} added to your income.`, icon: 'creditCard', link: '/income' });
       await checkMonthlyIncomeGoal(req.user.id);
     }
 
@@ -47,11 +47,11 @@ exports.updateDeal = async (req, res, next) => {
     const deal = await Deal.findByIdAndUpdate(req.params.id, { ...req.body, ...(req.body.isPaid && !existing.isPaid ? { paidAt: new Date() } : {}) }, { new: true });
 
     if (req.body.status === 'completed' && existing.status !== 'completed') {
-      await sendAchievement({ userId: req.user.id, type: 'deal', title: 'Deal Completed! 💰', message: `${deal.brandName} deal completed — $${deal.amount.toLocaleString()} earned!`, icon: '💰', link: '/income' });
+      await sendAchievement({ userId: req.user.id, type: 'deal', title: 'Deal completed', message: `${deal.brandName} deal completed — $${deal.amount.toLocaleString()} earned!`, icon: 'dollarSign', link: '/income' });
     }
 
     if (req.body.isPaid && !existing.isPaid) {
-      await sendAchievement({ userId: req.user.id, type: 'deal', title: 'Payment Received! 💸', message: `${deal.brandName} payment received — $${deal.amount.toLocaleString()} added to your income.`, icon: '💸', link: '/income' });
+      await sendAchievement({ userId: req.user.id, type: 'deal', title: 'Payment received', message: `${deal.brandName} payment received — $${deal.amount.toLocaleString()} added to your income.`, icon: 'creditCard', link: '/income' });
       await checkMonthlyIncomeGoal(req.user.id);
     }
 

@@ -111,8 +111,8 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
-  console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-  console.log(`🔒 Express trust proxy = ${app.get('trust proxy')} (set TRUST_PROXY_HOPS if Railway uses multiple hops)`);
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  console.log(`Express trust proxy = ${app.get('trust proxy')} (set TRUST_PROXY_HOPS if Railway uses multiple hops)`);
   logSmtpStartupCheck();
 });
 

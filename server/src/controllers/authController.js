@@ -66,7 +66,7 @@ exports.register = async (req, res, next) => {
     await user.save();
 
     // Welcome notification
-    await Notification.create({ userId: user._id, type: 'system', title: 'Welcome to Brand OS! 🎉', message: 'Your creator hub is ready. Start by adding your first content idea!', icon: 'logo', link: '/ideas' });
+    await Notification.create({ userId: user._id, type: 'system', title: 'Welcome to Brand OS', message: 'Your creator hub is ready. Start by adding your first content idea!', icon: 'logo', link: '/ideas' });
 
     // Welcome email (fire-and-log so SMTP issues never block registration)
     const tmpl = emailTemplates.welcome(name);

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Sparkles, Lightbulb, Hash, User, Copy, Plus, Check } from 'lucide-react'
+import { Sparkles, Lightbulb, Hash, User, Copy, Plus, Check, CircleHelp } from 'lucide-react'
 import { aiApi } from '../api'
 import { useIdeaStore } from '../store/stores'
 import toast from 'react-hot-toast'
@@ -212,7 +212,9 @@ export default function AIStudio() {
 
       {/* Tips */}
       <div className="card">
-        <div className="text-[13px] font-medium text-[#9898a8] mb-3">💡 Pro Tips for Better AI Results</div>
+        <div className="flex items-center gap-2 text-[13px] font-medium text-[#9898a8] mb-3">
+          <CircleHelp size={14} className="text-[#fbbf24]" /> Pro Tips for Better AI Results
+        </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {[
             { c:'#7c6ef8', t:'Be Specific', d:'The more specific your title or niche, the better the output.' },

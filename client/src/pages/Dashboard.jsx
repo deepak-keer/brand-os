@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts'
-import { Sparkles, Plus, ArrowRight, TrendingUp, Eye, DollarSign, FileText } from 'lucide-react'
+import { Sparkles, Plus, ArrowRight, TrendingUp, Eye, DollarSign, FileText, Hand } from 'lucide-react'
 import usePostStore from '../store/postStore'
 import useAuthStore from '../store/authStore'
 import { dealsApi, analyticsApi } from '../api'
@@ -45,7 +45,10 @@ export default function Dashboard() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-display font-bold text-lg sm:text-xl lg:text-[22px] text-[#e8e8f0]">
-            Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening'}, {user?.name?.split(' ')[0] || 'Creator'} 👋
+            <span className="inline-flex items-center gap-2 flex-wrap">
+              Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening'}, {user?.name?.split(' ')[0] || 'Creator'}
+              <Hand size={18} className="text-[#fbbf24]" />
+            </span>
           </h1>
           <p className="text-[#9898a8] text-[13px] mt-0.5">Here's your brand performance at a glance.</p>
         </div>

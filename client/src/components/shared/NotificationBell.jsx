@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { Bell, Check, Trash2, X } from 'lucide-react'
+import {
+  BadgeCheck, Bell, CalendarCheck, Check, CreditCard,
+  DollarSign, Handshake, Sparkles, Trash2, Trophy, X
+} from 'lucide-react'
 import { useNotificationStore } from '../../store/stores'
 import { formatDistanceToNow } from 'date-fns'
 
@@ -17,12 +20,23 @@ export default function NotificationBell() {
   }, [])
 
   const typeColors = { deal: '#4ade80', post: '#7c6ef8', goal: '#fbbf24', ai: '#f472b6', system: '#60a5fa' }
+  const iconMap = {
+    badgeCheck: BadgeCheck,
+    calendarCheck: CalendarCheck,
+    creditCard: CreditCard,
+    dollarSign: DollarSign,
+    handshake: Handshake,
+    sparkles: Sparkles,
+    trophy: Trophy,
+  }
+
   const renderNotificationIcon = (notification) => {
     if (notification.icon === 'logo' || (!notification.icon && notification.type === 'system')) {
       return <img src="/logo.png" alt="Brand OS" className="w-5 h-5 object-contain" />
     }
 
-    return notification.icon
+    const Icon = iconMap[notification.icon] || iconMap[notification.type] || Bell
+    return <Icon size={16} style={{ color: typeColors[notification.type] || '#7c6ef8' }} />
   }
 
   return (

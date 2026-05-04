@@ -7,7 +7,7 @@ const smtpEnvReady = Boolean(resendApiKey && fromEmail);
 
 if (!smtpEnvReady) {
   console.warn(
-    '⚠️  Resend email is not fully configured (set RESEND_API_KEY and FROM_EMAIL). Outbound mail will fail until both are set.',
+    'Resend email is not fully configured (set RESEND_API_KEY and FROM_EMAIL). Outbound mail will fail until both are set.',
   );
 }
 
@@ -19,28 +19,28 @@ const getResend = () => {
 
 const logSmtpStartupCheck = () => {
   if (!smtpEnvReady) {
-    console.warn('📧 Resend startup check skipped (missing RESEND_API_KEY or FROM_EMAIL)');
+    console.warn('Resend startup check skipped (missing RESEND_API_KEY or FROM_EMAIL)');
     return;
   }
   getResend()
     .domains.list({ limit: 1 })
     .then(({ data, error }) => {
       if (error) {
-        console.error('📧 Resend API check failed:', error.message || JSON.stringify(error));
+        console.error('Resend API check failed:', error.message || JSON.stringify(error));
         return;
       }
       const n = Array.isArray(data?.data) ? data.data.length : 0;
-      console.log(`📧 Resend API OK (${n} domain(s) listed — verify sending domain in Resend if needed)`);
+      console.log(`Resend API OK (${n} domain(s) listed — verify sending domain in Resend if needed)`);
     })
     .catch((err) => {
-      console.error('📧 Resend startup check failed:', err.message);
+      console.error('Resend startup check failed:', err.message);
     });
 };
 
 const sendEmail = async ({ to, subject, html }) => {
   if (!smtpEnvReady) {
     const err = new Error('Resend is not configured (missing RESEND_API_KEY or FROM_EMAIL)');
-    console.error('❌ Email send skipped:', err.message);
+    console.error('Email send skipped:', err.message);
     throw err;
   }
   const from = `"${process.env.FROM_NAME || 'Brand OS'}" <${fromEmail}>`;
@@ -52,10 +52,10 @@ const sendEmail = async ({ to, subject, html }) => {
   });
   if (error) {
     const msg = error.message || JSON.stringify(error);
-    console.error('❌ Email send failed:', msg);
+    console.error('Email send failed:', msg);
     throw new Error(msg);
   }
-  console.log(`📧 Email sent to ${to}${data?.id ? ` (id ${data.id})` : ''}`);
+  console.log(`Email sent to ${to}${data?.id ? ` (id ${data.id})` : ''}`);
 };
 
 const appLogoUrl = () => {
@@ -76,18 +76,18 @@ const logoMarkup = () => {
 
 const emailTemplates = {
   welcome: (name) => ({
-    subject: '🎉 Welcome to Personal Brand OS!',
+    subject: 'Welcome to Personal Brand OS',
     html: `
       <div style="font-family:sans-serif;max-width:600px;margin:0 auto;background:#0a0a0f;color:#e8e8f0;padding:40px;border-radius:16px">
         ${logoMarkup()}
-        <h1 style="font-size:24px;font-weight:700;margin-bottom:12px">Welcome, ${name}! 🚀</h1>
+        <h1 style="font-size:24px;font-weight:700;margin-bottom:12px">Welcome, ${name}!</h1>
         <p style="color:#9898a8;line-height:1.6">Your Personal Brand OS is ready. Start managing your content, deals, and analytics all in one place.</p>
         <a href="${process.env.CLIENT_URL}" style="display:inline-block;margin-top:24px;padding:12px 28px;background:#7c6ef8;color:#fff;text-decoration:none;border-radius:10px;font-weight:600">Launch your Brand OS →</a>
       </div>`,
   }),
 
   resetPassword: (name, url) => ({
-    subject: '🔐 Reset your password — Brand OS',
+    subject: 'Reset your password — Brand OS',
     html: `
       <div style="font-family:sans-serif;max-width:600px;margin:0 auto;background:#0a0a0f;color:#e8e8f0;padding:40px;border-radius:16px">
         ${logoMarkup()}

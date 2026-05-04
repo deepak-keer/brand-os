@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { Plus } from 'lucide-react'
+import { Plus, Sparkles } from 'lucide-react'
 import { useIdeaStore } from '../store/stores'
 import { Modal, Badge, Spinner } from '../components/ui'
 import toast from 'react-hot-toast'
@@ -97,7 +97,11 @@ export default function Ideas() {
                   <div key={idea._id} draggable onDragStart={e=>{setDragId(idea._id);e.dataTransfer.effectAllowed='move'}} onClick={()=>openEdit(idea)} className="kanban-card cursor-grab active:cursor-grabbing">
                     <div className="flex items-start justify-between gap-2 mb-1.5">
                       <div className="text-[13px] font-medium text-[#e8e8f0] leading-snug">{idea.title}</div>
-                      {idea.aiSuggested && <span className="text-[9px] px-1.5 py-0.5 rounded flex-shrink-0" style={{background:'rgba(124,110,248,0.15)',color:'#a78bfa'}}>✦ AI</span>}
+                      {idea.aiSuggested && (
+                        <span className="inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded flex-shrink-0" style={{background:'rgba(124,110,248,0.15)',color:'#a78bfa'}}>
+                          <Sparkles size={9} /> AI
+                        </span>
+                      )}
                     </div>
                     {idea.description && <div className="text-[11px] text-[#9898a8] mb-2 leading-relaxed line-clamp-2">{idea.description}</div>}
                     <div className="flex items-center gap-1.5 flex-wrap">

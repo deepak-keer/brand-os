@@ -36,11 +36,11 @@ exports.createPost = async (req, res, next) => {
 
     // Notify on schedule
     if (status === 'scheduled' && scheduledDate) {
-      await Notification.create({ userId: req.user.id, type: 'post', title: 'Post Scheduled 📅', message: `"${title}" has been scheduled for ${new Date(scheduledDate).toLocaleDateString()}`, icon: '📅', link: '/posts' });
+      await Notification.create({ userId: req.user.id, type: 'post', title: 'Post scheduled', message: `"${title}" has been scheduled for ${new Date(scheduledDate).toLocaleDateString()}`, icon: 'calendarCheck', link: '/posts' });
     }
 
     if (status === 'published') {
-      await sendAchievement({ userId: req.user.id, type: 'post', title: 'Post Published! 🎉', message: `"${title}" is now live on ${platform}`, icon: '🎉', link: '/posts' });
+      await sendAchievement({ userId: req.user.id, type: 'post', title: 'Post published', message: `"${title}" is now live on ${platform}`, icon: 'badgeCheck', link: '/posts' });
       await checkMonthlyPostGoal(req.user.id);
     }
 
@@ -81,7 +81,7 @@ exports.updatePost = async (req, res, next) => {
 
     // Notify on publish
     if (status === 'published' && existing.status !== 'published') {
-      await sendAchievement({ userId: req.user.id, type: 'post', title: 'Post Published! 🎉', message: `"${title}" is now live on ${platform}`, icon: '🎉', link: '/posts' });
+      await sendAchievement({ userId: req.user.id, type: 'post', title: 'Post published', message: `"${title}" is now live on ${platform}`, icon: 'badgeCheck', link: '/posts' });
       await checkMonthlyPostGoal(req.user.id);
     }
 
@@ -114,7 +114,7 @@ exports.updateStatus = async (req, res, next) => {
     );
 
     if (status === 'published' && existing.status !== 'published') {
-      await sendAchievement({ userId: req.user.id, type: 'post', title: 'Post Published! 🎉', message: `"${post.title}" is now live on ${post.platform}`, icon: '🎉', link: '/posts' });
+      await sendAchievement({ userId: req.user.id, type: 'post', title: 'Post published', message: `"${post.title}" is now live on ${post.platform}`, icon: 'badgeCheck', link: '/posts' });
       await checkMonthlyPostGoal(req.user.id);
     }
 

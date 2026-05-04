@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Plus } from 'lucide-react'
+import { Eye, Heart, Plus } from 'lucide-react'
 import usePostStore from '../store/postStore'
 import { Modal, Badge, EmptyState, Spinner, Divider } from '../components/ui'
 import toast from 'react-hot-toast'
@@ -91,8 +91,8 @@ export default function Posts() {
                     </div>
                     {p.status==='published' && p.metrics?.views > 0 && (
                       <div className="text-[10px] text-[#5a5a6a] mt-2 flex gap-3">
-                        <span>👁 {p.metrics.views.toLocaleString()}</span>
-                        <span>❤ {p.metrics.likes.toLocaleString()}</span>
+                        <span className="inline-flex items-center gap-1"><Eye size={10} /> {p.metrics.views.toLocaleString()}</span>
+                        <span className="inline-flex items-center gap-1"><Heart size={10} /> {p.metrics.likes.toLocaleString()}</span>
                       </div>
                     )}
                   </div>

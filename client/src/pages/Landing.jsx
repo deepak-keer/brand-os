@@ -2,14 +2,15 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import {
   BarChart2, Calendar, Lightbulb, Handshake, DollarSign,
-  Sparkles, FileText, ArrowRight, Check, Star, Menu, X,
-  TrendingUp, Shield, Globe, Users, ChevronDown
+  Sparkles, FileText, ArrowRight, Check, Menu, X,
+  TrendingUp, Shield, Globe, Users, ChevronDown, Zap,
+  CalendarCheck, BadgeCheck, CreditCard, Rocket
 } from 'lucide-react'
 
 const FEATURES = [
   { icon: BarChart2, color: '#7c6ef8', title: 'Analytics Dashboard', desc: 'Track followers, views, and engagement across YouTube, Instagram, LinkedIn, TikTok, and Twitter in one view.' },
   { icon: Calendar, color: '#4ade80', title: 'Content Calendar', desc: 'Schedule and visualize your content pipeline. Click any date to instantly schedule a post.' },
-  { icon: FileText, color: '#60a5fa', title: 'Post Tracker', desc: '5-stage Kanban pipeline — Idea → Draft → Review → Scheduled → Published. Drag and drop to move posts.' },
+  { icon: FileText, color: '#60a5fa', title: 'Post Tracker', desc: '5-stage Kanban pipeline from idea to draft, review, scheduled, and published. Drag and drop to move posts.' },
   { icon: Lightbulb, color: '#fbbf24', title: 'Idea Board', desc: 'Capture content ideas on a visual Kanban board. Move ideas from backlog to in-progress to ready.' },
   { icon: Handshake, color: '#f472b6', title: 'Brand Deal CRM', desc: 'Manage sponsorships, affiliate deals, and partnerships. Track status from outreach to payment.' },
   { icon: DollarSign, color: '#4ade80', title: 'Income Tracker', desc: 'Set monthly income goals, track earned vs pending payments, and see income breakdown by deal type.' },
@@ -48,11 +49,11 @@ const PLANS = [
   },
 ]
 
-const TESTIMONIALS = [
-  { name: 'Sarah K.', handle: '@sarahcreates', avatar: 'SK', niche: 'Finance Creator', text: 'Brand OS replaced 4 different tools I was using. The deal CRM alone saves me hours every week negotiating brand partnerships.', stars: 5 },
-  { name: 'Marcus T.', handle: '@marcusmakes', avatar: 'MT', niche: 'Tech YouTuber', text: 'The AI caption generator is scary good. I went from spending 30 min per post on captions to under 2 minutes. Total game changer.', stars: 5 },
-  { name: 'Priya N.', handle: '@priyabuilds', avatar: 'PN', niche: 'LinkedIn Creator', text: 'Finally a tool built for creators, not just marketers. The analytics dashboard gives me exactly the insights I need to grow.', stars: 5 },
-  { name: 'Jake L.', handle: '@jakecontent', avatar: 'JL', niche: 'Instagram Creator', text: 'I tracked my first $10K month using the income tracker. Seeing all my brand deals in one pipeline is incredibly motivating.', stars: 5 },
+const WORKFLOWS = [
+  { icon: CalendarCheck, color: '#4ade80', title: 'Plan the week', text: 'Turn ideas into scheduled posts without bouncing between docs, calendars, and spreadsheets.' },
+  { icon: Handshake, color: '#7c6ef8', title: 'Track every deal', text: 'Keep outreach, negotiation, deliverables, invoices, and paid status in one simple pipeline.' },
+  { icon: BarChart2, color: '#60a5fa', title: 'Review growth', text: 'Log platform metrics and see follower, view, and engagement trends from a single dashboard.' },
+  { icon: Sparkles, color: '#f472b6', title: 'Draft faster', text: 'Use AI for captions, ideas, hashtags, and bios, then refine the output in your own voice.' },
 ]
 
 const FAQS = [
@@ -208,10 +209,10 @@ export default function Landing() {
               {/* Top stats */}
               <div className="grid grid-cols-4 gap-3 mb-4">
                 {[
-                  { label: 'Total Followers', val: '78.5K', color: '#7c6ef8', change: '+2.3K' },
-                  { label: 'Monthly Views', val: '435K', color: '#4ade80', change: '+18K' },
-                  { label: 'Income Earned', val: '$4,300', color: '#fbbf24', change: 'this month' },
-                  { label: 'Posts Published', val: '12', color: '#60a5fa', change: '3 scheduled' },
+                    { label: 'Followers Logged', val: '8.4K', color: '#7c6ef8', change: '+320' },
+                    { label: 'Views Logged', val: '42K', color: '#4ade80', change: '+2.1K' },
+                    { label: 'Income Tracked', val: '$1,250', color: '#fbbf24', change: 'this month' },
+                    { label: 'Posts Published', val: '7', color: '#60a5fa', change: '3 scheduled' },
                 ].map(s => (
                   <div key={s.label} className="rounded-xl p-3" style={{ background: '#0f0f16', border: '1px solid #1e1e2a' }}>
                     <div className="text-[11px] text-[#5a5a6a] mb-1.5">{s.label}</div>
@@ -239,13 +240,13 @@ export default function Landing() {
                 <div className="rounded-xl p-3" style={{ background: '#0f0f16', border: '1px solid #1e1e2a' }}>
                   <div className="text-[11px] text-[#5a5a6a] mb-3">Recent Activity</div>
                   {[
-                    { icon: '🎉', text: 'Post published', color: '#4ade80' },
-                    { icon: '🤝', text: 'Deal confirmed', color: '#7c6ef8' },
-                    { icon: '💰', text: 'Payment received', color: '#fbbf24' },
-                    { icon: '✦', text: 'AI generated', color: '#f472b6' },
+                    { icon: BadgeCheck, text: 'Post published', color: '#4ade80' },
+                    { icon: Handshake, text: 'Deal confirmed', color: '#7c6ef8' },
+                    { icon: CreditCard, text: 'Payment received', color: '#fbbf24' },
+                    { icon: Sparkles, text: 'AI generated', color: '#f472b6' },
                   ].map((n,i) => (
                     <div key={i} className="flex items-center gap-2 py-1.5">
-                      <span className="text-sm">{n.icon}</span>
+                      <n.icon size={13} style={{ color: n.color }} />
                       <span className="text-[11px]" style={{ color: n.color }}>{n.text}</span>
                     </div>
                   ))}
@@ -259,10 +260,10 @@ export default function Landing() {
       {/* ── STATS ── */}
       <section className="py-10 md:py-12 px-4 md:px-6" style={{ borderTop: '1px solid #1e1e2a', borderBottom: '1px solid #1e1e2a' }}>
         <div className="max-w-4xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
-          <StatBadge value="12,000+" label="Creators using Brand OS" />
-          <StatBadge value="$8.4M+" label="Brand deals tracked" />
-          <StatBadge value="450K+" label="Posts scheduled" />
-          <StatBadge value="4.9★" label="Average rating" />
+          <StatBadge value="5" label="Core creator workflows" />
+          <StatBadge value="12 mo" label="Growth trend view" />
+          <StatBadge value="25" label="Hashtags per AI run" />
+          <StatBadge value="$0" label="Free plan to start" />
         </div>
       </section>
 
@@ -305,13 +306,15 @@ export default function Landing() {
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { step: '01', icon: '⚡', title: 'Create your account', desc: 'Sign up free in 30 seconds. No credit card, no setup fees.' },
-              { step: '02', icon: '📊', title: 'Connect your platforms', desc: 'Add your social profiles and enter your current follower counts to start tracking.' },
-              { step: '03', icon: '🚀', title: 'Start creating & growing', desc: 'Schedule posts, track deals, generate AI content, and watch your brand grow.' },
+              { step: '01', icon: Zap, title: 'Create your account', desc: 'Sign up free in 30 seconds. No credit card, no setup fees.' },
+              { step: '02', icon: BarChart2, title: 'Connect your platforms', desc: 'Add your social profiles and enter your current follower counts to start tracking.' },
+              { step: '03', icon: Rocket, title: 'Start creating & growing', desc: 'Schedule posts, track deals, generate AI content, and watch your brand grow.' },
             ].map(s => (
               <div key={s.step} className="relative">
                 <div className="text-[11px] font-mono font-bold text-[#5a5a6a] mb-3">{s.step}</div>
-                <div className="text-4xl mb-4">{s.icon}</div>
+                <div className="w-12 h-12 mx-auto mb-4 rounded-xl flex items-center justify-center" style={{ background: 'rgba(124,110,248,0.12)', border: '1px solid rgba(124,110,248,0.22)' }}>
+                  <s.icon size={20} className="text-[#a78bfa]" />
+                </div>
                 <h3 className="font-display font-semibold text-[16px] text-[#e8e8f0] mb-2">{s.title}</h3>
                 <p className="text-[13px] text-[#9898a8] leading-relaxed">{s.desc}</p>
               </div>
@@ -320,30 +323,23 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ── */}
+      {/* ── WORKFLOWS ── */}
       <section className="py-16 md:py-24 px-4 md:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-10 md:mb-16">
-            <div className="section-label mb-3">Creator Stories</div>
+            <div className="section-label mb-3">Creator Workflows</div>
             <h2 className="font-display font-bold text-[clamp(22px,4vw,44px)] text-[#e8e8f0]">
-              Loved by creators worldwide
+              Built around the work creators repeat every week
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {TESTIMONIALS.map((t, i) => (
+            {WORKFLOWS.map((w, i) => (
               <div key={i} className="p-5 rounded-2xl" style={{ background: '#0f0f16', border: '1px solid #1e1e2a' }}>
-                <div className="flex gap-1 mb-3">
-                  {Array(t.stars).fill(0).map((_,si) => <Star key={si} size={13} className="text-[#fbbf24] fill-[#fbbf24]" />)}
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style={{ background: `${w.color}14` }}>
+                  <w.icon size={18} style={{ color: w.color }} />
                 </div>
-                <p className="text-[13px] text-[#c8c8d8] leading-relaxed mb-4">"{t.text}"</p>
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-[12px] text-white"
-                    style={{ background: 'linear-gradient(135deg, #7c6ef8, #f472b6)' }}>{t.avatar}</div>
-                  <div>
-                    <div className="text-[13px] font-medium text-[#e8e8f0]">{t.name}</div>
-                    <div className="text-[11px] text-[#5a5a6a]">{t.niche}</div>
-                  </div>
-                </div>
+                <h3 className="font-display font-semibold text-[14px] text-[#e8e8f0] mb-2">{w.title}</h3>
+                <p className="text-[12px] text-[#9898a8] leading-relaxed">{w.text}</p>
               </div>
             ))}
           </div>
@@ -427,10 +423,10 @@ export default function Landing() {
       <section className="py-12 px-6" style={{ borderTop: '1px solid #1e1e2a', borderBottom: '1px solid #1e1e2a' }}>
         <div className="max-w-3xl mx-auto flex flex-wrap justify-center gap-8">
           {[
-            { icon: Shield, label: 'SOC 2 Compliant' },
-            { icon: Globe, label: 'GDPR Ready' },
-            { icon: Users, label: '12K+ Creators' },
-            { icon: TrendingUp, label: '99.9% Uptime' },
+            { icon: Shield, label: 'JWT-secured auth' },
+            { icon: Globe, label: 'Multi-platform tracking' },
+            { icon: Users, label: 'Creator-first workspace' },
+            { icon: TrendingUp, label: 'Growth snapshots' },
           ].map(b => (
             <div key={b.label} className="flex items-center gap-2.5 text-[13px] text-[#9898a8]">
               <b.icon size={16} className="text-[#4ade80]" />
@@ -454,7 +450,7 @@ export default function Landing() {
             Ready to build your brand?
           </h2>
           <p className="text-[16px] text-[#9898a8] mb-8">
-            Join 12,000+ creators who manage their entire personal brand from one dashboard.
+            Start with a clean workspace for planning content, tracking deals, and reviewing growth.
           </p>
           <button className="btn-primary text-[16px] px-10 py-4" onClick={() => navigate('/register')}>
             Get Started Free <ArrowRight size={16} />

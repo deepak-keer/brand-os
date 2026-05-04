@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
+import { Eye, Heart, MessageCircle, Plus } from 'lucide-react'
 import { analyticsApi } from '../api'
 import { Badge, StatCard, Spinner } from '../components/ui'
 import toast from 'react-hot-toast'
@@ -109,7 +110,7 @@ export default function Analytics() {
         <div className="px-4 py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between" style={{ borderBottom:'1px solid #1e1e2a' }}>
           <span className="text-[13px] font-medium text-[#9898a8]">Platform Breakdown</span>
           <button type="button" className="btn-primary text-[12px] w-full sm:w-auto justify-center" onClick={() => { setEditPlatform(null); setForm({ platform:'YouTube',followers:0,totalViews:0,totalLikes:0,totalComments:0,engagementRate:0 }) }}>
-            + Add Platform
+            <Plus size={13} /> Add Platform
           </button>
         </div>
 
@@ -185,9 +186,9 @@ export default function Analytics() {
                 <div className="flex-1 min-w-0">
                   <div className="text-[13px] font-medium truncate">{p.title}</div>
                   <div className="flex gap-3 text-[11px] text-[#5a5a6a] mt-0.5">
-                    <span>👁 {(p.metrics?.views||0).toLocaleString()}</span>
-                    <span>❤ {(p.metrics?.likes||0).toLocaleString()}</span>
-                    <span>💬 {(p.metrics?.comments||0).toLocaleString()}</span>
+                    <span className="inline-flex items-center gap-1"><Eye size={11} /> {(p.metrics?.views||0).toLocaleString()}</span>
+                    <span className="inline-flex items-center gap-1"><Heart size={11} /> {(p.metrics?.likes||0).toLocaleString()}</span>
+                    <span className="inline-flex items-center gap-1"><MessageCircle size={11} /> {(p.metrics?.comments||0).toLocaleString()}</span>
                   </div>
                 </div>
                 <Badge label={p.platform} />

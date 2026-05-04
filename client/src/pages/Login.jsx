@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { Eye, EyeOff } from 'lucide-react'
+import { ArrowLeft, Eye, EyeOff, Mail } from 'lucide-react'
 import useAuthStore from '../store/authStore'
 import { authApi } from '../api'
 import toast from 'react-hot-toast'
@@ -84,7 +84,7 @@ export function Register() {
 
   const handle = async (e) => {
     e.preventDefault()
-    try { await register(form.username, form.email, form.password); toast.success('Account created! 🎉'); navigate('/dashboard') }
+    try { await register(form.username, form.email, form.password); toast.success('Account created!'); navigate('/dashboard') }
     catch (err) { toast.error(err.response?.data?.message || 'Registration failed') }
   }
 
@@ -138,10 +138,12 @@ export function ForgotPassword() {
     <AuthShell title="Reset your password" sub="We'll send a reset link to your email">
       {sent ? (
         <div className="text-center py-6">
-          <div className="text-4xl mb-4">📧</div>
+          <div className="w-12 h-12 mx-auto mb-4 rounded-xl flex items-center justify-center" style={{ background: 'rgba(96,165,250,0.12)', border: '1px solid rgba(96,165,250,0.24)' }}>
+            <Mail size={22} className="text-[#60a5fa]" />
+          </div>
           <div className="font-medium text-[15px] mb-2">Check your email</div>
           <div className="text-[13px] text-[#9898a8]">We sent a link to <span className="text-[#a78bfa]">{email}</span></div>
-          <Link to="/login" className="btn-ghost mt-6 justify-center inline-flex">← Back to login</Link>
+          <Link to="/login" className="btn-ghost mt-6 justify-center inline-flex"><ArrowLeft size={13} /> Back to login</Link>
         </div>
       ) : (
         <form onSubmit={handle} className="space-y-4">
@@ -155,7 +157,7 @@ export function ForgotPassword() {
         </form>
       )}
       <p className="text-center text-[13px] text-[#9898a8] mt-5">
-        <Link to="/login" className="text-[#a78bfa] hover:underline">← Back to login</Link>
+        <Link to="/login" className="inline-flex items-center gap-1 text-[#a78bfa] hover:underline"><ArrowLeft size={12} /> Back to login</Link>
       </p>
     </AuthShell>
   )
