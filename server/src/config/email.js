@@ -1,29 +1,54 @@
 const nodemailer = require('nodemailer');
 
 const smtpPort = +process.env.SMTP_PORT || 587;
-const smtpHost = process.env.SMTP_HOST;
-const smtpUser = process.env.SMTP_USER;
-const smtpPass = process.env.SMTP_PASS;
+// Trim + strip spaces in app passwords (common when pasting Gmail 16-char codes from UI)
+const smtpHost = String(process.env.SMTP_HOST || '').trim();
+const smtpUser = String(process.env.SMTP_USER || '').trim();
+const smtpPass = String(process.env.SMTP_PASS || '').replace(/\s+/g, '');
 
 const smtpConfigured = Boolean(smtpHost && smtpUser && smtpPass);
+const smtpEnvReady = smtpConfigured;
+
 if (!smtpConfigured) {
   console.warn(
     '⚠️  SMTP is not fully configured (set SMTP_HOST, SMTP_USER, SMTP_PASS in the environment). Email will fail until these are set — local .env is not deployed to production by default.',
   );
 }
 
+const requireTLS = smtpPort === 587 && String(process.env.SMTP_REQUIRE_TLS || 'true').toLowerCase() !== 'false';
+const useIpv4 = String(process.env.SMTP_IPV4 || '').toLowerCase() === '1' || String(process.env.SMTP_IPV4 || '').toLowerCase() === 'true';
+
 const transporter = nodemailer.createTransport({
   host: smtpHost,
   port: smtpPort,
   secure: smtpPort === 465,
-  requireTLS: smtpPort === 587,
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 15000,
-  auth: smtpConfigured
-    ? { user: smtpUser, pass: smtpPass }
-    : undefined,
+  requireTLS,
+  ...(useIpv4 ? { family: 4 } : {}),
+  connectionTimeout: 15000,
+  greetingTimeout: 15000,
+  socketTimeout: 20000,
+  tls: { minVersion: 'TLSv1.2' },
+  auth: smtpConfigured ? { user: smtpUser, pass: smtpPass } : undefined,
 });
+
+const logSmtpStartupCheck = () => {
+  if (!smtpConfigured) {
+    console.warn('📧 SMTP startup check skipped (missing SMTP_HOST / SMTP_USER / SMTP_PASS)');
+    return;
+  }
+  transporter
+    .verify()
+    .then(() => {
+      console.log(`📧 SMTP verified OK → ${smtpHost}:${smtpPort} (user ${smtpUser})`);
+    })
+    .catch((err) => {
+      console.error('📧 SMTP verify failed — outbound mail will not work until fixed:', err.message);
+      if (err.code) console.error('   code:', err.code);
+      if (err.command) console.error('   command:', err.command);
+      if (err.response) console.error('   response:', err.response);
+      console.error('   Hint: set the same SMTP_* vars on the host as in local .env; for Gmail use an App Password and try SMTP_IPV4=1 if you see timeouts.');
+    });
+};
 
 const sendEmail = async ({ to, subject, html }) => {
   if (!smtpConfigured) {
@@ -42,6 +67,8 @@ const sendEmail = async ({ to, subject, html }) => {
     console.log(`📧 Email sent to ${to}`);
   } catch (err) {
     console.error('❌ Email send failed:', err.message);
+    if (err.code) console.error('   code:', err.code);
+    if (err.response) console.error('   response:', err.response);
     throw err;
   }
 };
@@ -134,4 +161,4 @@ const emailTemplates = {
   }),
 };
 
-module.exports = { sendEmail, emailTemplates };
+module.exports = { sendEmail, emailTemplates, logSmtpStartupCheck, smtpEnvReady };

@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -8,29 +9,52 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 
-dotenv.config();
+// Resolve from this file so SMTP and secrets load in Docker/PaaS even when cwd is not /app
+dotenv.config({ path: path.join(__dirname, '../.env') });
 connectDB();
+
+const { logSmtpStartupCheck, smtpEnvReady } = require('./config/email');
 
 const app = express();
 
-// One hop (load balancer / edge) — required so req.ip and express-rate-limit
-// honor X-Forwarded-For in containers (ERR_ERL_UNEXPECTED_X_FORWARDED_FOR).
-app.set('trust proxy', Number(process.env.TRUST_PROXY_HOPS) || 1);
+// Railway / Render send X-Forwarded-For. express-rate-limit v7 errors if trust proxy stays false (Express default).
+// Use a number (hop count), not `true` — v7 also rejects trust proxy === true (ERR_ERL_PERMISSIVE_TRUST_PROXY).
+const trustProxyHopsRaw = process.env.TRUST_PROXY_HOPS;
+const trustProxyHops =
+  trustProxyHopsRaw != null && String(trustProxyHopsRaw).trim() !== '' && Number.isFinite(Number(trustProxyHopsRaw))
+    ? Math.max(1, Math.min(32, Number(trustProxyHopsRaw)))
+    : 1;
+app.set('trust proxy', trustProxyHops);
+
+// If anything resets settings, rate-limit still sees trust proxy on each request.
+app.use((req, _res, next) => {
+  if (req.app.get('trust proxy') === false) {
+    req.app.set('trust proxy', trustProxyHops);
+  }
+  next();
+});
 
 // Security headers
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
-// CORS
+// CORS — CLIENT_URL is the deployed frontend; add CORS_EXTRA_ORIGINS for local dev hitting this API (e.g. http://localhost:5173)
+const normalizeOrigin = (u) => String(u || '').trim().replace(/\/$/, '');
 const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
-const allowedOrigin = clientUrl.replace(/\/$/, '');
+const allowedOrigins = new Set(
+  [
+    normalizeOrigin(clientUrl),
+    ...String(process.env.CORS_EXTRA_ORIGINS || '')
+      .split(',')
+      .map((s) => normalizeOrigin(s))
+      .filter(Boolean),
+  ],
+);
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || origin.replace(/\/$/, '') === allowedOrigin) {
-      return callback(null, true);
-    }
-
-    return callback(new Error(`Origin ${origin} not allowed by CORS`));
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.has(normalizeOrigin(origin))) return callback(null, true);
+    return callback(null, false);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -70,10 +94,12 @@ app.use('/api/notifications', require('./routes/notificationRoutes'));
 app.use('/api/ai', require('./routes/aiRoutes'));
 app.use('/api/upload', require('./routes/uploadRoutes'));
 
-// Health check
+// Health check (smtpEnvReady: env vars present — check logs for "SMTP verified OK" after boot)
 app.get('/api/health', (req, res) => res.json({
   status: 'ok',
   env: process.env.NODE_ENV,
+  smtpEnvReady,
+  trustProxy: app.get('trust proxy'),
   timestamp: new Date().toISOString(),
 }));
 
@@ -86,6 +112,8 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
   console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  console.log(`🔒 Express trust proxy = ${app.get('trust proxy')} (set TRUST_PROXY_HOPS if Railway uses multiple hops)`);
+  logSmtpStartupCheck();
 });
 
 // Graceful shutdown
