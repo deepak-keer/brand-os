@@ -1,76 +1,61 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-const smtpPort = +process.env.SMTP_PORT || 587;
-// Trim + strip spaces in app passwords (common when pasting Gmail 16-char codes from UI)
-const smtpHost = String(process.env.SMTP_HOST || '').trim();
-const smtpUser = String(process.env.SMTP_USER || '').trim();
-const smtpPass = String(process.env.SMTP_PASS || '').replace(/\s+/g, '');
+const resendApiKey = String(process.env.RESEND_API_KEY || '').trim();
+const fromEmail = String(process.env.FROM_EMAIL || '').trim();
 
-const smtpConfigured = Boolean(smtpHost && smtpUser && smtpPass);
-const smtpEnvReady = smtpConfigured;
+const smtpEnvReady = Boolean(resendApiKey && fromEmail);
 
-if (!smtpConfigured) {
+if (!smtpEnvReady) {
   console.warn(
-    '⚠️  SMTP is not fully configured (set SMTP_HOST, SMTP_USER, SMTP_PASS in the environment). Email will fail until these are set — local .env is not deployed to production by default.',
+    '⚠️  Resend email is not fully configured (set RESEND_API_KEY and FROM_EMAIL). Outbound mail will fail until both are set.',
   );
 }
 
-const requireTLS = smtpPort === 587 && String(process.env.SMTP_REQUIRE_TLS || 'true').toLowerCase() !== 'false';
-const useIpv4 = String(process.env.SMTP_IPV4 || '').toLowerCase() === '1' || String(process.env.SMTP_IPV4 || '').toLowerCase() === 'true';
-
-const transporter = nodemailer.createTransport({
-  host: smtpHost,
-  port: smtpPort,
-  secure: smtpPort === 465,
-  requireTLS,
-  ...(useIpv4 ? { family: 4 } : {}),
-  connectionTimeout: 15000,
-  greetingTimeout: 15000,
-  socketTimeout: 20000,
-  tls: { minVersion: 'TLSv1.2' },
-  auth: smtpConfigured ? { user: smtpUser, pass: smtpPass } : undefined,
-});
+let resendClient;
+const getResend = () => {
+  if (!resendClient) resendClient = new Resend(resendApiKey);
+  return resendClient;
+};
 
 const logSmtpStartupCheck = () => {
-  if (!smtpConfigured) {
-    console.warn('📧 SMTP startup check skipped (missing SMTP_HOST / SMTP_USER / SMTP_PASS)');
+  if (!smtpEnvReady) {
+    console.warn('📧 Resend startup check skipped (missing RESEND_API_KEY or FROM_EMAIL)');
     return;
   }
-  transporter
-    .verify()
-    .then(() => {
-      console.log(`📧 SMTP verified OK → ${smtpHost}:${smtpPort} (user ${smtpUser})`);
+  getResend()
+    .domains.list({ limit: 1 })
+    .then(({ data, error }) => {
+      if (error) {
+        console.error('📧 Resend API check failed:', error.message || JSON.stringify(error));
+        return;
+      }
+      const n = Array.isArray(data?.data) ? data.data.length : 0;
+      console.log(`📧 Resend API OK (${n} domain(s) listed — verify sending domain in Resend if needed)`);
     })
     .catch((err) => {
-      console.error('📧 SMTP verify failed — outbound mail will not work until fixed:', err.message);
-      if (err.code) console.error('   code:', err.code);
-      if (err.command) console.error('   command:', err.command);
-      if (err.response) console.error('   response:', err.response);
-      console.error('   Hint: set the same SMTP_* vars on the host as in local .env; for Gmail use an App Password and try SMTP_IPV4=1 if you see timeouts.');
+      console.error('📧 Resend startup check failed:', err.message);
     });
 };
 
 const sendEmail = async ({ to, subject, html }) => {
-  if (!smtpConfigured) {
-    const err = new Error('SMTP is not configured (missing SMTP_HOST, SMTP_USER, or SMTP_PASS)');
+  if (!smtpEnvReady) {
+    const err = new Error('Resend is not configured (missing RESEND_API_KEY or FROM_EMAIL)');
     console.error('❌ Email send skipped:', err.message);
     throw err;
   }
-  try {
-    const fromEmail = process.env.FROM_EMAIL || smtpUser;
-    await transporter.sendMail({
-      from: `"${process.env.FROM_NAME || 'Brand OS'}" <${fromEmail}>`,
-      to,
-      subject,
-      html,
-    });
-    console.log(`📧 Email sent to ${to}`);
-  } catch (err) {
-    console.error('❌ Email send failed:', err.message);
-    if (err.code) console.error('   code:', err.code);
-    if (err.response) console.error('   response:', err.response);
-    throw err;
+  const from = `"${process.env.FROM_NAME || 'Brand OS'}" <${fromEmail}>`;
+  const { data, error } = await getResend().emails.send({
+    from,
+    to,
+    subject,
+    html,
+  });
+  if (error) {
+    const msg = error.message || JSON.stringify(error);
+    console.error('❌ Email send failed:', msg);
+    throw new Error(msg);
   }
+  console.log(`📧 Email sent to ${to}${data?.id ? ` (id ${data.id})` : ''}`);
 };
 
 const appLogoUrl = () => {

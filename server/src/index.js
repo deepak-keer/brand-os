@@ -94,7 +94,7 @@ app.use('/api/notifications', require('./routes/notificationRoutes'));
 app.use('/api/ai', require('./routes/aiRoutes'));
 app.use('/api/upload', require('./routes/uploadRoutes'));
 
-// Health check (smtpEnvReady: env vars present — check logs for "SMTP verified OK" after boot)
+// Health check (smtpEnvReady: RESEND_API_KEY + FROM_EMAIL set — check logs for "Resend API OK" after boot)
 app.get('/api/health', (req, res) => res.json({
   status: 'ok',
   env: process.env.NODE_ENV,
