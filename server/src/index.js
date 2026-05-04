@@ -13,6 +13,10 @@ connectDB();
 
 const app = express();
 
+// One hop (load balancer / edge) — required so req.ip and express-rate-limit
+// honor X-Forwarded-For in containers (ERR_ERL_UNEXPECTED_X_FORWARDED_FOR).
+app.set('trust proxy', Number(process.env.TRUST_PROXY_HOPS) || 1);
+
 // Security headers
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
