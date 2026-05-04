@@ -57,19 +57,22 @@ export default function Posts() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-5">
         <div>
-          <h1 className="font-display font-bold text-xl text-[#e8e8f0]">Post Tracker</h1>
+          <h1 className="font-display font-bold text-lg md:text-xl text-[#e8e8f0]">Post Tracker</h1>
           <p className="text-[13px] text-[#9898a8] mt-0.5">{posts.length} posts · drag to change status</p>
         </div>
-        <button className="btn-primary" onClick={() => openAdd()}><Plus size={14} /> New Post</button>
+        <button className="btn-primary w-full sm:w-auto justify-center" onClick={() => openAdd()}><Plus size={14} /> New Post</button>
       </div>
 
-      <div className="flex gap-3 overflow-x-auto pb-4 flex-1" style={{minHeight:0}}>
+      <div
+        className="flex gap-3 overflow-x-auto pb-4 flex-1 -mx-4 px-4 lg:mx-0 lg:px-0 snap-x snap-mandatory lg:snap-none scroll-smooth"
+        style={{ minHeight: 0 }}
+      >
         {COLS.map(col => {
           const colPosts = posts.filter(p => p.status === col.key)
           return (
-            <div key={col.key} className="flex flex-col flex-shrink-0" style={{width:240}}>
+            <div key={col.key} className="flex flex-col flex-shrink-0 w-[min(85vw,280px)] lg:w-[240px] snap-center lg:snap-start">
               <div className="kanban-col-header">
                 <span className="text-[11px] font-bold uppercase tracking-wider" style={{color:col.color}}>{col.label}</span>
                 <div className="flex items-center gap-2">
@@ -104,7 +107,7 @@ export default function Posts() {
         <Modal title={edit?'Edit Post':'New Post'} onClose={()=>setShow(false)} onSave={handleSave} saving={saving}>
           <div className="space-y-3">
             <div className="form-group"><label className="form-label">Title *</label><input className="input-field" value={form.title} onChange={e=>setForm({...form,title:e.target.value})} placeholder="Post title" /></div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="form-group"><label className="form-label">Platform</label><select className="select-field" value={form.platform} onChange={e=>setForm({...form,platform:e.target.value})}>{PLATFORMS.map(p=><option key={p}>{p}</option>)}</select></div>
               <div className="form-group"><label className="form-label">Status</label><select className="select-field" value={form.status} onChange={e=>setForm({...form,status:e.target.value})}>{COLS.map(c=><option key={c.key} value={c.key}>{c.label}</option>)}</select></div>
             </div>
@@ -112,7 +115,7 @@ export default function Posts() {
             <div className="form-group"><label className="form-label">Caption</label><textarea className="textarea-field" rows={3} value={form.caption} onChange={e=>setForm({...form,caption:e.target.value})} placeholder="Write your caption..." /></div>
             <div className="form-group"><label className="form-label">Tags (comma-separated)</label><input className="input-field" value={form.tags} onChange={e=>setForm({...form,tags:e.target.value})} placeholder="tips, creator" /></div>
             <div className="form-group"><label className="form-label">Notes</label><input className="input-field" value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})} placeholder="Internal notes..." /></div>
-            {edit && (<><Divider label="Metrics" /><div className="grid grid-cols-2 gap-3">{['views','likes','comments','shares'].map(m=><div key={m} className="form-group"><label className="form-label capitalize">{m}</label><input className="input-field" type="number" min="0" value={form.metrics[m]} onChange={e=>setForm({...form,metrics:{...form.metrics,[m]:+e.target.value}})} /></div>)}</div></>)}
+            {edit && (<><Divider label="Metrics" /><div className="grid grid-cols-1 sm:grid-cols-2 gap-3">{['views','likes','comments','shares'].map(m=><div key={m} className="form-group"><label className="form-label capitalize">{m}</label><input className="input-field" type="number" min="0" value={form.metrics[m]} onChange={e=>setForm({...form,metrics:{...form.metrics,[m]:+e.target.value}})} /></div>)}</div></>)}
             {edit && <button className="text-[12px] text-[#f87171] hover:underline mt-1" onClick={handleDelete}>Delete Post</button>}
           </div>
         </Modal>

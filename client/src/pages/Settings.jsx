@@ -65,15 +65,15 @@ export default function Settings() {
   return (
     <div className="max-w-2xl space-y-5">
       <div>
-        <h1 className="font-display font-bold text-xl text-[#e8e8f0]">Settings</h1>
+        <h1 className="font-display font-bold text-lg md:text-xl text-[#e8e8f0]">Settings</h1>
         <p className="text-[13px] text-[#9898a8] mt-0.5">Manage your profile, security, and preferences</p>
       </div>
 
       {/* Tab bar */}
-      <div className="flex gap-1 p-1 rounded-xl" style={{ background: '#0f0f16', border: '1px solid #1e1e2a' }}>
+      <div className="flex gap-1 p-1 rounded-xl overflow-x-auto -mx-1 px-1 sm:mx-0 sm:px-0 sm:overflow-visible" style={{ background: '#0f0f16', border: '1px solid #1e1e2a' }}>
         {TABS.map(t => (
-          <button key={t} onClick={() => setTab(t)}
-            className={`flex-1 py-2 rounded-lg text-[13px] font-medium transition-all ${tab === t ? 'bg-[#18181f] text-[#e8e8f0] border border-[#2a2a35]' : 'text-[#9898a8] hover:text-[#e8e8f0]'}`}>
+          <button type="button" key={t} onClick={() => setTab(t)}
+            className={`flex-1 min-w-[44px] min-h-[44px] sm:min-h-0 py-2.5 sm:py-2 px-2 rounded-lg text-[12px] sm:text-[13px] font-medium transition-all whitespace-nowrap ${tab === t ? 'bg-[#18181f] text-[#e8e8f0] border border-[#2a2a35]' : 'text-[#9898a8] hover:text-[#e8e8f0]'}`}>
             {t}
           </button>
         ))}
@@ -83,8 +83,8 @@ export default function Settings() {
       {tab === 'Profile' && (
         <div className="card space-y-5">
           {/* Avatar */}
-          <div className="flex items-center gap-5">
-            <div className="relative">
+          <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
+            <div className="relative flex-shrink-0">
               {user?.avatar ? (
                 <img src={user.avatar} alt="" className="w-20 h-20 rounded-2xl object-cover" />
               ) : (
@@ -105,7 +105,7 @@ export default function Settings() {
 
           <Divider />
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="form-group">
               <label className="form-label">Full Name</label>
               <input className="input-field" value={profile.name} onChange={e => setProfile({ ...profile, name: e.target.value })} />
@@ -172,7 +172,7 @@ export default function Settings() {
               <span className="text-[#9898a8]">{goals.currentPosts} / {goals.posts}</span>
             </div>
             <Progress value={postsPct} />
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div><label className="form-label">Target</label><input className="input-field" type="number" min="0" value={goals.posts} onChange={e => setGoals({ ...goals, posts: +e.target.value })} /></div>
               <div><label className="form-label">Current</label><input className="input-field" type="number" min="0" value={goals.currentPosts} onChange={e => setGoals({ ...goals, currentPosts: +e.target.value })} /></div>
             </div>
@@ -185,7 +185,7 @@ export default function Settings() {
               <span className="text-[#9898a8]">${goals.currentIncome?.toLocaleString()} / ${goals.income?.toLocaleString()}</span>
             </div>
             <Progress value={incomePct} color="#4ade80" />
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div><label className="form-label">Target ($)</label><input className="input-field" type="number" min="0" value={goals.income} onChange={e => setGoals({ ...goals, income: +e.target.value })} /></div>
               <div><label className="form-label">Earned ($)</label><input className="input-field" type="number" min="0" value={goals.currentIncome} onChange={e => setGoals({ ...goals, currentIncome: +e.target.value })} /></div>
             </div>
@@ -205,7 +205,7 @@ export default function Settings() {
             <span className="font-semibold text-[14px]">Active Platforms</span>
           </div>
           <p className="text-[13px] text-[#9898a8]">Select the platforms you actively create content for.</p>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {PLATFORMS.map(p => {
               const active = platforms.includes(p)
               return (

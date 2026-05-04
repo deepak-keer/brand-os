@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Plus } from 'lucide-react'
 import { useIdeaStore } from '../store/stores'
 import { Modal, Badge, Spinner } from '../components/ui'
@@ -19,6 +19,8 @@ export default function Ideas() {
   const [form, setForm] = useState(EF)
   const [saving, setSaving] = useState(false)
   const [dragId, setDragId] = useState(null)
+  const [mobileCol, setMobileCol] = useState(COLS[0].key)
+  const colRefs = useRef({})
 
   useEffect(() => { fetchIdeas() }, [])
 
@@ -48,21 +50,40 @@ export default function Ideas() {
 
   if (isLoading && !ideas.length) return <Spinner />
 
+  const scrollToCol = (key) => {
+    setMobileCol(key)
+    colRefs.current[key]?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
+  }
+
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-5">
         <div>
-          <h1 className="font-display font-bold text-xl text-[#e8e8f0]">Idea Board</h1>
+          <h1 className="font-display font-bold text-lg md:text-xl text-[#e8e8f0]">Idea Board</h1>
           <p className="text-[13px] text-[#9898a8] mt-0.5">{ideas.length} ideas · drag to move between stages</p>
         </div>
-        <button className="btn-primary" onClick={() => openAdd()}><Plus size={14} /> New Idea</button>
+        <button className="btn-primary w-full sm:w-auto justify-center" onClick={() => openAdd()}><Plus size={14} /> New Idea</button>
       </div>
 
-      <div className="flex gap-4 overflow-x-auto flex-1 pb-4" style={{minHeight:0}}>
+      <div className="lg:hidden mb-3">
+        <label className="form-label">Column</label>
+        <select className="select-field" value={mobileCol} onChange={e => scrollToCol(e.target.value)}>
+          {COLS.map(c => <option key={c.key} value={c.key}>{c.label}</option>)}
+        </select>
+      </div>
+
+      <div
+        className="flex gap-4 overflow-x-auto flex-1 pb-4 -mx-4 px-4 lg:mx-0 lg:px-0 snap-x snap-mandatory lg:snap-none scroll-smooth"
+        style={{ minHeight: 0 }}
+      >
         {COLS.map(col => {
           const colIdeas = ideas.filter(i => i.column === col.key)
           return (
-            <div key={col.key} className="flex flex-col flex-shrink-0" style={{width:300}}>
+            <div
+              key={col.key}
+              ref={el => { colRefs.current[col.key] = el }}
+              className="flex flex-col flex-shrink-0 w-[min(88vw,300px)] lg:w-[300px] snap-center lg:snap-start"
+            >
               <div className="kanban-col-header">
                 <span className="text-[11px] font-bold uppercase tracking-wider" style={{color:col.color}}>{col.label}</span>
                 <div className="flex items-center gap-2">
@@ -97,7 +118,7 @@ export default function Ideas() {
           <div className="space-y-3">
             <div className="form-group"><label className="form-label">Title *</label><input className="input-field" value={form.title} onChange={e=>setForm({...form,title:e.target.value})} placeholder="Content idea..." /></div>
             <div className="form-group"><label className="form-label">Description</label><textarea className="textarea-field" rows={2} value={form.description} onChange={e=>setForm({...form,description:e.target.value})} placeholder="Brief description..." /></div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="form-group"><label className="form-label">Platform</label><select className="select-field" value={form.platform} onChange={e=>setForm({...form,platform:e.target.value})}>{PLATFORMS.map(p=><option key={p}>{p}</option>)}</select></div>
               <div className="form-group"><label className="form-label">Priority</label><select className="select-field" value={form.priority} onChange={e=>setForm({...form,priority:e.target.value})}><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select></div>
             </div>

@@ -8,22 +8,22 @@ import toast from 'react-hot-toast'
 // ─── SHARED AUTH SHELL ───────────────────────────────────────────────────────
 function AuthShell({ title, sub, children }) {
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: '#070709' }}>
+    <div className="min-h-screen flex items-center justify-center px-4 py-8" style={{ background: '#070709' }}>
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[500px] h-[500px] rounded-full opacity-10 blur-[100px]" style={{ background: 'radial-gradient(ellipse, #7c6ef8, transparent 70%)' }} />
+        <div className="w-[min(100vw,500px)] h-[min(100vw,500px)] rounded-full opacity-10 blur-[100px]" style={{ background: 'radial-gradient(ellipse, #7c6ef8, transparent 70%)' }} />
       </div>
       <div className="relative w-full max-w-[400px]">
-        <div className="flex flex-col items-center mb-7">
-          <Link to="/" className="flex items-center gap-2 mb-5">
+        <div className="flex flex-col items-center mb-6 md:mb-7">
+          <Link to="/" className="flex items-center gap-2 mb-4 md:mb-5">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden" style={{ background: '#111119', border: '1px solid #2a2a35' }}>
               <img src="/logo.png" alt="Brand OS" className="w-8 h-8 object-contain" />
             </div>
-            <span className="font-display font-bold text-[16px] text-[#e8e8f0]">Brand OS</span>
+            <span className="font-display font-bold text-[15px] md:text-[16px] text-[#e8e8f0]">Brand OS</span>
           </Link>
-          <h1 className="font-display font-bold text-[22px] text-[#e8e8f0]">{title}</h1>
-          <p className="text-[13px] text-[#9898a8] mt-1">{sub}</p>
+          <h1 className="font-display font-bold text-xl md:text-[22px] text-[#e8e8f0] text-center">{title}</h1>
+          <p className="text-[13px] text-[#9898a8] mt-1 text-center px-2">{sub}</p>
         </div>
-        <div style={{ background: '#0f0f16', border: '1px solid #2a2a35', borderRadius: 16, padding: 24 }}>
+        <div className="p-4 md:p-6 rounded-2xl" style={{ background: '#0f0f16', border: '1px solid #2a2a35' }}>
           {children}
         </div>
       </div>
@@ -64,7 +64,7 @@ export default function Login() {
         <div className="flex justify-end">
           <Link to="/forgot-password" className="text-[12px] text-[#a78bfa] hover:underline">Forgot password?</Link>
         </div>
-        <button type="submit" className="btn-primary w-full justify-center py-2.5" disabled={isLoading}>
+        <button type="submit" className="btn-primary w-full justify-center" disabled={isLoading}>
           {isLoading ? 'Signing in...' : 'Sign In'}
         </button>
       </form>
@@ -108,7 +108,7 @@ export function Register() {
             </button>
           </div>
         </div>
-        <button type="submit" className="btn-primary w-full justify-center py-2.5" disabled={isLoading}>
+        <button type="submit" className="btn-primary w-full justify-center" disabled={isLoading}>
           {isLoading ? 'Creating account...' : 'Get Started Free'}
         </button>
         <p className="text-[11px] text-[#5a5a6a] text-center">By signing up you agree to our Terms of Service.</p>
@@ -149,7 +149,7 @@ export function ForgotPassword() {
             <label className="form-label">Email</label>
             <input className="input-field" type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} required />
           </div>
-          <button type="submit" className="btn-primary w-full justify-center py-2.5" disabled={loading}>
+          <button type="submit" className="btn-primary w-full justify-center" disabled={loading}>
             {loading ? 'Sending...' : 'Send Reset Link'}
           </button>
         </form>
@@ -189,7 +189,7 @@ export function ResetPassword() {
           <label className="form-label">Confirm Password</label>
           <input className="input-field" type="password" placeholder="Repeat password" value={confirm} onChange={e => setConfirm(e.target.value)} required />
         </div>
-        <button type="submit" className="btn-primary w-full justify-center py-2.5" disabled={loading}>
+        <button type="submit" className="btn-primary w-full justify-center" disabled={loading}>
           {loading ? 'Resetting...' : 'Reset Password'}
         </button>
       </form>

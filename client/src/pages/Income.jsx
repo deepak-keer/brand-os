@@ -31,18 +31,18 @@ export default function Income() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="font-display font-bold text-xl text-[#e8e8f0]">Income Tracker</h1>
+        <h1 className="font-display font-bold text-lg md:text-xl text-[#e8e8f0]">Income Tracker</h1>
         <p className="text-[13px] text-[#9898a8] mt-0.5">Track earnings, goals, and deal income</p>
       </div>
 
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <StatCard title="Total Earned" value={`$${summary?.totalEarned?.toLocaleString()||0}`} subColor="#4ade80" sub="Paid deals" />
         <StatCard title="Pending" value={`$${summary?.totalPending?.toLocaleString()||0}`} subColor="#fbbf24" sub="Awaiting payment" />
         <StatCard title="Total Pipeline" value={`$${summary?.totalPipeline?.toLocaleString()||0}`} sub="All deals" />
         <StatCard title="Income Goal" value={`${Math.round(incomePct)}%`} sub={`$${(goals.currentIncome||0).toLocaleString()} / $${(goals.income||0).toLocaleString()}`} subColor={incomePct>=100?'#4ade80':'#fbbf24'} />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="card space-y-4">
           <div className="text-[13px] font-medium text-[#9898a8]">Monthly Goals</div>
 
@@ -52,7 +52,7 @@ export default function Income() {
               <span className="text-[#9898a8]">{goals.currentPosts} / {goals.posts}</span>
             </div>
             <Progress value={postsPct} />
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div><label className="form-label">Target Posts</label><input className="input-field" type="number" min="0" value={goals.posts} onChange={e=>setGoals({...goals,posts:+e.target.value})} /></div>
               <div><label className="form-label">Published So Far</label><input className="input-field" type="number" min="0" value={goals.currentPosts} onChange={e=>setGoals({...goals,currentPosts:+e.target.value})} /></div>
             </div>
@@ -64,7 +64,7 @@ export default function Income() {
               <span className="text-[#9898a8]">${(goals.currentIncome||0).toLocaleString()} / ${(goals.income||0).toLocaleString()}</span>
             </div>
             <Progress value={incomePct} color="#4ade80" />
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div><label className="form-label">Target ($)</label><input className="input-field" type="number" min="0" value={goals.income} onChange={e=>setGoals({...goals,income:+e.target.value})} /></div>
               <div><label className="form-label">Earned ($)</label><input className="input-field" type="number" min="0" value={goals.currentIncome} onChange={e=>setGoals({...goals,currentIncome:+e.target.value})} /></div>
             </div>

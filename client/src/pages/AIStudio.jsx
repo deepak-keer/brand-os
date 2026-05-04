@@ -27,7 +27,7 @@ function AICard({ icon: Icon, iconBg, title, sub, children }) {
 
 function LoadingBtn({ loading, label, loadLabel, onClick, color = '#7c6ef8' }) {
   return (
-    <button className="w-full flex items-center justify-center gap-2 font-medium text-[13px] py-2.5 rounded-xl transition-all active:scale-[0.98]"
+    <button type="button" className="w-full flex items-center justify-center gap-2 font-medium text-[13px] min-h-[44px] md:min-h-[42px] py-2.5 rounded-xl transition-all active:scale-[0.98]"
       style={{ background: `${color}18`, border: `1px solid ${color}30`, color }}
       onClick={onClick} disabled={loading}>
       {loading
@@ -113,15 +113,15 @@ export default function AIStudio() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="font-display font-bold text-xl text-[#e8e8f0]">AI Studio</h1>
+        <h1 className="font-display font-bold text-lg md:text-xl text-[#e8e8f0]">AI Studio</h1>
         <p className="text-[13px] text-[#9898a8] mt-0.5">Powered by Groq — generate content instantly</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Caption Generator */}
         <AICard icon={Sparkles} iconBg="rgba(124,110,248,0.15)" title="Caption Generator" sub="Platform-perfect captions with hashtags">
           <div className="form-group"><label className="form-label">Post Title</label><input className="input-field" placeholder="e.g. 10 Productivity Hacks for Creators" value={cap.title} onChange={e=>setCap({...cap,title:e.target.value})} /></div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="form-group"><label className="form-label">Platform</label><select className="select-field" value={cap.platform} onChange={e=>setCap({...cap,platform:e.target.value})}>{PLATFORMS.map(p=><option key={p}>{p}</option>)}</select></div>
             <div className="form-group"><label className="form-label">Tone</label><select className="select-field" value={cap.tone} onChange={e=>setCap({...cap,tone:e.target.value})}>{TONES.map(t=><option key={t}>{t}</option>)}</select></div>
           </div>
@@ -142,7 +142,7 @@ export default function AIStudio() {
         {/* Idea Generator */}
         <AICard icon={Lightbulb} iconBg="rgba(74,222,128,0.12)" title="Content Idea Generator" sub="5 viral ideas for your niche">
           <div className="form-group"><label className="form-label">Your Niche</label><input className="input-field" placeholder="e.g. Personal Finance, Tech, Fitness" value={ideaForm.niche} onChange={e=>setIdeaForm({...ideaForm,niche:e.target.value})} /></div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="form-group"><label className="form-label">Platform</label><select className="select-field" value={ideaForm.platform} onChange={e=>setIdeaForm({...ideaForm,platform:e.target.value})}>{PLATFORMS.map(p=><option key={p}>{p}</option>)}</select></div>
             <div className="form-group"><label className="form-label">Style</label><select className="select-field" value={ideaForm.style} onChange={e=>setIdeaForm({...ideaForm,style:e.target.value})}>{STYLES.map(s=><option key={s}>{s}</option>)}</select></div>
           </div>
@@ -188,7 +188,7 @@ export default function AIStudio() {
 
         {/* Bio Generator */}
         <AICard icon={User} iconBg="rgba(244,114,182,0.12)" title="Bio Generator" sub="Professional bios for all platforms">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="form-group"><label className="form-label">Your Name</label><input className="input-field" placeholder="Your full name" value={bioForm.name} onChange={e=>setBioForm({...bioForm,name:e.target.value})} /></div>
             <div className="form-group"><label className="form-label">Niche</label><input className="input-field" placeholder="e.g. Tech Creator" value={bioForm.niche} onChange={e=>setBioForm({...bioForm,niche:e.target.value})} /></div>
           </div>
@@ -213,7 +213,7 @@ export default function AIStudio() {
       {/* Tips */}
       <div className="card">
         <div className="text-[13px] font-medium text-[#9898a8] mb-3">💡 Pro Tips for Better AI Results</div>
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {[
             { c:'#7c6ef8', t:'Be Specific', d:'The more specific your title or niche, the better the output.' },
             { c:'#4ade80', t:'Match the Tone', d:'Pick Casual for Instagram, Professional for LinkedIn.' },

@@ -42,25 +42,25 @@ export default function Dashboard() {
   return (
     <div className="space-y-5 max-w-[1200px]">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display font-bold text-[22px] text-[#e8e8f0]">
+          <h1 className="font-display font-bold text-lg sm:text-xl lg:text-[22px] text-[#e8e8f0]">
             Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening'}, {user?.name?.split(' ')[0] || 'Creator'} 👋
           </h1>
           <p className="text-[#9898a8] text-[13px] mt-0.5">Here's your brand performance at a glance.</p>
         </div>
-        <div className="flex gap-2">
-          <button className="btn-ghost" onClick={() => navigate('/posts')}>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <button className="btn-ghost w-full sm:w-auto justify-center" onClick={() => navigate('/posts')}>
             <Plus size={14} /> New Post
           </button>
-          <button className="btn-primary" onClick={() => navigate('/ai')}>
+          <button className="btn-primary w-full sm:w-auto justify-center" onClick={() => navigate('/ai')}>
             <Sparkles size={14} /> AI Studio
           </button>
         </div>
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <StatCard icon={TrendingUp} iconColor="#7c6ef8" title="Total Followers" value={stats ? `${(stats.totalFollowers/1000).toFixed(1)}K` : '—'} sub="Across all platforms" subColor="#4ade80" onClick={() => navigate('/analytics')} />
         <StatCard icon={Eye} iconColor="#4ade80" title="Total Views" value={stats ? `${(stats.totalViews/1000).toFixed(0)}K` : '—'} sub="All platforms" onClick={() => navigate('/analytics')} />
         <StatCard icon={DollarSign} iconColor="#fbbf24" title="Income Earned" value={summary ? `$${summary.totalEarned?.toLocaleString()}` : '—'} sub={summary ? `$${summary.totalPending?.toLocaleString()} pending` : ''} subColor="#fbbf24" onClick={() => navigate('/income')} />
@@ -68,7 +68,7 @@ export default function Dashboard() {
       </div>
 
       {/* Chart + Goals */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="card">
           <div className="text-[13px] text-[#9898a8] font-medium mb-4">Views — Last 12 Months</div>
           <ResponsiveContainer width="100%" height={160}>
@@ -110,7 +110,7 @@ export default function Dashboard() {
       </div>
 
       {/* Recent Posts + Quick Actions */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="card">
           <div className="flex items-center justify-between mb-4">
             <span className="text-[13px] text-[#9898a8] font-medium">Recent Posts</span>
@@ -136,7 +136,7 @@ export default function Dashboard() {
 
         <div className="card">
           <div className="text-[13px] text-[#9898a8] font-medium mb-4">Quick Actions</div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {[
               { label: 'New Post', icon: FileText, path: '/posts', color: '#7c6ef8', bg: 'rgba(124,110,248,0.1)' },
               { label: 'New Deal', icon: DollarSign, path: '/deals', color: '#4ade80', bg: 'rgba(74,222,128,0.1)' },

@@ -3,21 +3,41 @@ import { X, AlertTriangle } from 'lucide-react'
 // ── Modal ─────────────────────────────────────────────────────────────────────
 export function Modal({ title, children, onClose, onSave, saveLabel = 'Save', saving = false, wide = false, danger = false }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+    <div
+      className="fixed inset-0 z-50 flex items-stretch justify-center max-md:p-0 md:items-center md:p-4"
       style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(6px)' }}
-      onClick={onClose}>
-      <div className={`${wide ? 'w-[640px]' : 'w-[480px]'} max-h-[88vh] overflow-y-auto rounded-2xl p-6`}
+      onClick={onClose}
+    >
+      <div
+        className={`
+          w-full flex flex-col
+          max-md:min-h-[100dvh] max-md:max-h-[100dvh] max-md:rounded-none max-md:p-4 max-md:pt-3
+          md:max-h-[90vh] md:overflow-y-auto md:rounded-2xl md:p-6
+          lg:max-h-[88vh]
+          ${wide ? 'md:max-w-[640px]' : 'md:max-w-[480px]'}
+        `}
         style={{ background: '#0f0f16', border: '1px solid #2a2a35', boxShadow: '0 32px 80px rgba(0,0,0,0.6)' }}
-        onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="font-display font-bold text-lg text-[#e8e8f0]">{title}</h2>
-          <button onClick={onClose} className="btn-icon"><X size={16} /></button>
+        onClick={e => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        <div className="flex md:hidden flex-col items-center pt-1 pb-2 flex-shrink-0" aria-hidden>
+          <div className="w-10 h-1 rounded-full bg-[#3a3a4a]" />
         </div>
-        {children}
+        <div className="flex items-center justify-between mb-4 md:mb-5 gap-3 flex-shrink-0">
+          <h2 id="modal-title" className="font-display font-bold text-base md:text-lg text-[#e8e8f0] pr-2">{title}</h2>
+          <button type="button" onClick={onClose} className="btn-icon min-h-[44px] min-w-[44px] md:min-h-8 md:min-w-8 flex-shrink-0" aria-label="Close">
+            <X size={16} />
+          </button>
+        </div>
+        <div className="flex-1 min-h-0 overflow-y-auto md:overflow-visible">
+          {children}
+        </div>
         {onSave && (
-          <div className="flex gap-2 justify-end mt-5 pt-4" style={{ borderTop: '1px solid #1e1e2a' }}>
-            <button className="btn-ghost" onClick={onClose}>Cancel</button>
-            <button className={danger ? 'btn-danger' : 'btn-primary'} onClick={onSave} disabled={saving}>
+          <div className="flex flex-col-reverse sm:flex-row gap-2 justify-end mt-5 pt-4 flex-shrink-0" style={{ borderTop: '1px solid #1e1e2a' }}>
+            <button type="button" className="btn-ghost w-full sm:w-auto justify-center" onClick={onClose}>Cancel</button>
+            <button type="button" className={`${danger ? 'btn-danger' : 'btn-primary'} w-full sm:w-auto justify-center`} onClick={onSave} disabled={saving}>
               {saving ? 'Saving...' : saveLabel}
             </button>
           </div>
@@ -30,17 +50,29 @@ export function Modal({ title, children, onClose, onSave, saveLabel = 'Save', sa
 // ── Confirm Dialog ────────────────────────────────────────────────────────────
 export function ConfirmDialog({ title, message, onConfirm, onCancel, dangerous = true }) {
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4"
-      style={{ background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(6px)' }}>
-      <div className="w-[360px] rounded-2xl p-6" style={{ background: '#0f0f16', border: '1px solid #2a2a35' }}>
+    <div
+      className="fixed inset-0 z-[60] flex items-stretch justify-center max-md:p-0 md:items-center md:p-4"
+      style={{ background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(6px)' }}
+      onClick={onCancel}
+    >
+      <div
+        className="w-full md:w-[360px] md:max-h-[90vh] md:overflow-y-auto max-md:min-h-[100dvh] max-md:rounded-none rounded-2xl p-4 md:p-6 flex flex-col justify-center"
+        style={{ background: '#0f0f16', border: '1px solid #2a2a35' }}
+        onClick={e => e.stopPropagation()}
+        role="alertdialog"
+        aria-modal="true"
+      >
+        <div className="flex md:hidden flex-col items-center gap-1 pb-3">
+          <div className="w-10 h-1 rounded-full bg-[#3a3a4a]" />
+        </div>
         <div className="flex items-center gap-3 mb-3">
           {dangerous && <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(248,113,113,0.12)' }}><AlertTriangle size={18} className="text-[#f87171]" /></div>}
-          <h3 className="font-display font-bold text-[16px]">{title}</h3>
+          <h3 className="font-display font-bold text-[15px] md:text-[16px]">{title}</h3>
         </div>
         <p className="text-[13px] text-[#9898a8] mb-5 leading-relaxed">{message}</p>
-        <div className="flex gap-2 justify-end">
-          <button className="btn-ghost" onClick={onCancel}>Cancel</button>
-          <button className={dangerous ? 'btn-danger' : 'btn-primary'} onClick={onConfirm}>Confirm</button>
+        <div className="flex flex-col-reverse sm:flex-row gap-2 justify-end">
+          <button type="button" className="btn-ghost w-full sm:w-auto justify-center" onClick={onCancel}>Cancel</button>
+          <button type="button" className={`${dangerous ? 'btn-danger' : 'btn-primary'} w-full sm:w-auto justify-center`} onClick={onConfirm}>Confirm</button>
         </div>
       </div>
     </div>

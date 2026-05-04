@@ -65,9 +65,9 @@ const FAQS = [
 
 function StatBadge({ value, label }) {
   return (
-    <div className="flex flex-col items-center px-8 py-4">
-      <div className="font-display text-4xl font-bold text-[#e8e8f0] mb-1">{value}</div>
-      <div className="text-[13px] text-[#9898a8]">{label}</div>
+    <div className="flex flex-col items-center px-4 py-3 md:px-8 md:py-4">
+      <div className="font-display text-2xl md:text-4xl font-bold text-[#e8e8f0] mb-1">{value}</div>
+      <div className="text-[12px] md:text-[13px] text-[#9898a8] text-center leading-snug">{label}</div>
     </div>
   )
 }
@@ -90,7 +90,7 @@ export default function Landing() {
       {/* ── NAVBAR ── */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'py-3' : 'py-4'}`}
         style={{ background: scrolled ? 'rgba(7,7,9,0.92)' : 'transparent', backdropFilter: scrolled ? 'blur(20px)' : 'none', borderBottom: scrolled ? '1px solid #1e1e2a' : '1px solid transparent' }}>
-        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 md:px-6 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl flex items-center justify-center overflow-hidden" style={{ background: '#111119', border: '1px solid #2a2a35' }}>
               <img src="/logo.png" alt="Brand OS" className="w-6 h-6 object-contain" />
@@ -113,28 +113,29 @@ export default function Landing() {
             </button>
           </div>
 
-          {/* Mobile menu button */}
-          <button className="md:hidden btn-icon" onClick={() => setMenuOpen(v => !v)}>
-            {menuOpen ? <X size={18} /> : <Menu size={18} />}
-          </button>
+          <div className="md:hidden flex items-center gap-2">
+            <button className="btn-primary text-[12px] px-3 py-2.5 min-h-[44px]" onClick={() => navigate('/register')}>
+              Get Started <ArrowRight size={12} />
+            </button>
+            <button type="button" className="btn-icon min-h-[44px] min-w-[44px]" onClick={() => setMenuOpen(v => !v)} aria-label="Menu">
+              {menuOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile menu */}
         {menuOpen && (
-          <div className="md:hidden px-6 pb-4 pt-2 flex flex-col gap-2" style={{ background: '#0c0c13', borderBottom: '1px solid #1e1e2a' }}>
+          <div className="md:hidden px-4 pb-4 pt-2 flex flex-col gap-1" style={{ background: '#0c0c13', borderBottom: '1px solid #1e1e2a' }}>
             {['Features','Pricing','FAQ'].map(l => (
-              <a key={l} href={`#${l.toLowerCase()}`} className="text-[14px] text-[#9898a8] py-2" onClick={() => setMenuOpen(false)}>{l}</a>
+              <a key={l} href={`#${l.toLowerCase()}`} className="text-[14px] text-[#9898a8] py-3 min-h-[44px] flex items-center" onClick={() => setMenuOpen(false)}>{l}</a>
             ))}
-            <div className="flex gap-2 mt-2">
-              <Link to="/login" className="btn-ghost flex-1 justify-center">Sign in</Link>
-              <button className="btn-primary flex-1 justify-center" onClick={() => navigate('/register')}>Get Started</button>
-            </div>
+            <Link to="/login" className="text-[13px] text-[#5a5a6a] py-2 hover:text-[#9898a8]" onClick={() => setMenuOpen(false)}>Sign in</Link>
           </div>
         )}
       </nav>
 
       {/* ── HERO ── */}
-      <section className="relative pt-32 pb-24 px-6 overflow-hidden">
+      <section className="relative pt-28 md:pt-32 pb-16 md:pb-24 px-4 md:px-6 overflow-hidden">
         {/* Background glows */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full opacity-20 blur-[120px] pointer-events-none"
           style={{ background: 'radial-gradient(ellipse, #7c6ef8 0%, transparent 70%)' }} />
@@ -161,25 +162,37 @@ export default function Landing() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center animate-slide-up delay-200">
-            <button className="btn-primary text-[15px] px-8 py-3.5" onClick={() => navigate('/register')}>
+            <button className="btn-primary text-[15px] px-8 py-3.5 min-h-[48px]" onClick={() => navigate('/register')}>
               Start for Free <ArrowRight size={15} />
             </button>
-            <a href="#features" className="btn-ghost text-[15px] px-8 py-3.5 justify-center">
+            <a href="#features" className="btn-ghost text-[15px] px-8 py-3.5 min-h-[48px] justify-center">
               See Features
             </a>
           </div>
 
-          <div className="flex items-center justify-center gap-6 mt-8 text-[12px] text-[#5a5a6a] animate-fade-in delay-300">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap items-center justify-center gap-3 sm:gap-6 mt-8 text-[12px] text-[#5a5a6a] animate-fade-in delay-300">
             {['No credit card required', 'Free plan forever', 'Setup in 2 minutes'].map(t => (
               <div key={t} className="flex items-center gap-1.5">
-                <Check size={12} className="text-[#4ade80]" /> {t}
+                <Check size={12} className="text-[#4ade80] flex-shrink-0" /> {t}
               </div>
             ))}
           </div>
+
+          {/* Mobile: feature highlights instead of browser mockup */}
+          <div className="md:hidden mt-10 text-left max-w-md mx-auto">
+            <div className="text-[11px] font-semibold text-[#5a5a6a] uppercase tracking-widest mb-3 text-center">What you get</div>
+            <div className="flex flex-wrap justify-center gap-2">
+              {['Analytics', 'Content calendar', 'Deal CRM', 'AI Studio', 'Income tracking', 'Idea board'].map(t => (
+                <span key={t} className="text-[12px] px-3 py-2 rounded-full font-medium" style={{ background: 'rgba(124,110,248,0.1)', border: '1px solid rgba(124,110,248,0.2)', color: '#c4b5fd' }}>
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Dashboard mockup */}
-        <div className="relative max-w-5xl mx-auto mt-16 animate-slide-up delay-400">
+        {/* Dashboard mockup — tablet + desktop */}
+        <div className="relative max-w-5xl mx-auto mt-16 animate-slide-up delay-400 hidden md:block">
           <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #2a2a35', boxShadow: '0 40px 120px rgba(0,0,0,0.6), 0 0 60px rgba(124,110,248,0.12)' }}>
             {/* Fake browser bar */}
             <div className="flex items-center gap-2 px-4 py-3" style={{ background: '#0f0f16', borderBottom: '1px solid #1e1e2a' }}>
@@ -244,8 +257,8 @@ export default function Landing() {
       </section>
 
       {/* ── STATS ── */}
-      <section className="py-12 px-6" style={{ borderTop: '1px solid #1e1e2a', borderBottom: '1px solid #1e1e2a' }}>
-        <div className="max-w-4xl mx-auto flex flex-wrap justify-center divide-x" style={{ borderColor: '#1e1e2a' }}>
+      <section className="py-10 md:py-12 px-4 md:px-6" style={{ borderTop: '1px solid #1e1e2a', borderBottom: '1px solid #1e1e2a' }}>
+        <div className="max-w-4xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
           <StatBadge value="12,000+" label="Creators using Brand OS" />
           <StatBadge value="$8.4M+" label="Brand deals tracked" />
           <StatBadge value="450K+" label="Posts scheduled" />
@@ -254,19 +267,19 @@ export default function Landing() {
       </section>
 
       {/* ── FEATURES ── */}
-      <section id="features" className="py-24 px-6">
+      <section id="features" className="py-16 md:py-24 px-4 md:px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 md:mb-16">
             <div className="section-label mb-3">Everything you need</div>
-            <h2 className="font-display font-bold text-[clamp(28px,4vw,44px)] text-[#e8e8f0] mb-4">
+            <h2 className="font-display font-bold text-[clamp(22px,4vw,44px)] text-[#e8e8f0] mb-4">
               Built for creators, by creators
             </h2>
-            <p className="text-[16px] text-[#9898a8] max-w-xl mx-auto">
+            <p className="text-[14px] md:text-[16px] text-[#9898a8] max-w-xl mx-auto">
               Replace 6+ tools with one dashboard. Every feature is designed around how creators actually work.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {FEATURES.map((f, i) => (
               <div key={i} className="group p-5 rounded-2xl transition-all hover:-translate-y-1 cursor-default"
                 style={{ background: '#0f0f16', border: '1px solid #1e1e2a' }}
@@ -284,10 +297,10 @@ export default function Landing() {
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section className="py-24 px-6" style={{ background: '#0a0a10' }}>
+      <section className="py-16 md:py-24 px-4 md:px-6" style={{ background: '#0a0a10' }}>
         <div className="max-w-4xl mx-auto text-center">
           <div className="section-label mb-3">How it works</div>
-          <h2 className="font-display font-bold text-[clamp(28px,4vw,44px)] text-[#e8e8f0] mb-16">
+          <h2 className="font-display font-bold text-[clamp(22px,4vw,44px)] text-[#e8e8f0] mb-10 md:mb-16">
             Up and running in minutes
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -308,15 +321,15 @@ export default function Landing() {
       </section>
 
       {/* ── TESTIMONIALS ── */}
-      <section className="py-24 px-6">
+      <section className="py-16 md:py-24 px-4 md:px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 md:mb-16">
             <div className="section-label mb-3">Creator Stories</div>
-            <h2 className="font-display font-bold text-[clamp(28px,4vw,44px)] text-[#e8e8f0]">
+            <h2 className="font-display font-bold text-[clamp(22px,4vw,44px)] text-[#e8e8f0]">
               Loved by creators worldwide
             </h2>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {TESTIMONIALS.map((t, i) => (
               <div key={i} className="p-5 rounded-2xl" style={{ background: '#0f0f16', border: '1px solid #1e1e2a' }}>
                 <div className="flex gap-1 mb-3">
@@ -465,7 +478,7 @@ export default function Landing() {
                 The creator's command center. Built for YouTubers, Instagram creators, LinkedIn builders, and everyone in between.
               </p>
             </div>
-            <div className="grid grid-cols-3 gap-12 text-[13px]">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12 text-[13px]">
               {[
                 { title: 'Product', links: [['Features','#features'],['Pricing','#pricing'],['Changelog','#'],['Roadmap','#']] },
                 { title: 'Company', links: [['About','#'],['Blog','#'],['Careers','#'],['Press','#']] },

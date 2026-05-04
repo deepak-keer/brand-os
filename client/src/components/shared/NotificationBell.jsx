@@ -37,7 +37,7 @@ export default function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-10 w-[360px] rounded-2xl overflow-hidden z-50 shadow-2xl"
+        <div className="absolute right-0 top-10 w-[min(360px,calc(100vw-2rem))] max-h-[min(480px,70vh)] rounded-2xl overflow-hidden z-50 shadow-2xl"
           style={{ background: '#0f0f16', border: '1px solid #2a2a35' }}>
           <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '1px solid #1e1e2a' }}>
             <span className="font-display font-semibold text-[14px]">Notifications</span>

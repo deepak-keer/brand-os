@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'https://positive-rebirth-production-c5b3.up.railway.app/api'
+const API_BASE_URL = 'http://localhost:8000/api'
 
 const axiosClient = axios.create({
   baseURL: API_BASE_URL,

@@ -45,41 +45,64 @@ export default function Deals() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display font-bold text-xl text-[#e8e8f0]">Brand Deals CRM</h1>
+          <h1 className="font-display font-bold text-lg md:text-xl text-[#e8e8f0]">Brand Deals CRM</h1>
           <p className="text-[13px] text-[#9898a8] mt-0.5">{deals.length} deals in pipeline</p>
         </div>
-        <button className="btn-primary" onClick={openAdd}><Plus size={14} /> New Deal</button>
+        <button className="btn-primary w-full sm:w-auto justify-center" onClick={openAdd}><Plus size={14} /> New Deal</button>
       </div>
 
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <StatCard title="Total Pipeline" value={`$${summary?.totalPipeline?.toLocaleString()||0}`} />
         <StatCard title="Earned" value={`$${summary?.totalEarned?.toLocaleString()||0}`} subColor="#4ade80" sub="Paid" />
         <StatCard title="Pending" value={`$${summary?.totalPending?.toLocaleString()||0}`} subColor="#fbbf24" sub="Awaiting payment" />
         <StatCard title="Active" value={deals.filter(d=>d.status==='confirmed'||d.status==='negotiating').length} sub="Confirmed + Negotiating" />
       </div>
 
-      <div className="card overflow-hidden p-0">
-        <table className="data-table w-full">
-          <thead><tr>
-            {['Brand','Type','Status','Value','Deadline','Payment',''].map(h=><th key={h}>{h}</th>)}
-          </tr></thead>
-          <tbody>
-            {deals.map(d => (
-              <tr key={d._id}>
-                <td><div className="font-medium text-[#e8e8f0]">{d.brandName}</div>{d.contactEmail&&<div className="text-[11px] text-[#5a5a6a]">{d.contactEmail}</div>}</td>
-                <td><Badge label={d.dealType} /></td>
-                <td><Badge label={d.status} /></td>
-                <td className="font-semibold">${d.amount.toLocaleString()}</td>
-                <td className="text-[#9898a8]">{d.deadline?new Date(d.deadline).toLocaleDateString():'—'}</td>
-                <td><span className={`badge ${d.isPaid?'badge-green':'badge-amber'}`}>{d.isPaid?'Paid':'Pending'}</span></td>
-                <td><button className="btn-ghost text-[11px]" onClick={()=>openEdit(d)}>Edit</button></td>
-              </tr>
-            ))}
-            {!deals.length && <tr><td colSpan={7} className="text-center py-12 text-[#5a5a6a]">No deals yet. Add your first brand deal!</td></tr>}
-          </tbody>
-        </table>
+      <div className="md:hidden space-y-3">
+        {deals.map(d => (
+          <button type="button" key={d._id} className="card w-full text-left p-4 space-y-3" onClick={() => openEdit(d)}>
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <div className="font-medium text-[#e8e8f0]">{d.brandName}</div>
+                {d.contactEmail && <div className="text-[11px] text-[#5a5a6a]">{d.contactEmail}</div>}
+              </div>
+              <span className="font-semibold text-[#e8e8f0]">${d.amount.toLocaleString()}</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Badge label={d.dealType} />
+              <Badge label={d.status} />
+              <span className={`badge ${d.isPaid?'badge-green':'badge-amber'}`}>{d.isPaid?'Paid':'Pending'}</span>
+            </div>
+            <div className="text-[12px] text-[#9898a8]">Due {d.deadline ? new Date(d.deadline).toLocaleDateString() : '—'}</div>
+          </button>
+        ))}
+        {!deals.length && <div className="card py-12 text-center text-[#5a5a6a] text-[13px]">No deals yet. Add your first brand deal!</div>}
+      </div>
+
+      <div className="hidden md:block card overflow-hidden p-0">
+        <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+          <table className="data-table w-full min-w-[640px]">
+            <thead><tr>
+              {['Brand','Type','Status','Value','Deadline','Payment',''].map(h=><th key={h}>{h}</th>)}
+            </tr></thead>
+            <tbody>
+              {deals.map(d => (
+                <tr key={d._id}>
+                  <td><div className="font-medium text-[#e8e8f0]">{d.brandName}</div>{d.contactEmail&&<div className="text-[11px] text-[#5a5a6a]">{d.contactEmail}</div>}</td>
+                  <td><Badge label={d.dealType} /></td>
+                  <td><Badge label={d.status} /></td>
+                  <td className="font-semibold">${d.amount.toLocaleString()}</td>
+                  <td className="text-[#9898a8]">{d.deadline?new Date(d.deadline).toLocaleDateString():'—'}</td>
+                  <td><span className={`badge ${d.isPaid?'badge-green':'badge-amber'}`}>{d.isPaid?'Paid':'Pending'}</span></td>
+                  <td><button type="button" className="btn-ghost text-[11px]" onClick={()=>openEdit(d)}>Edit</button></td>
+                </tr>
+              ))}
+              {!deals.length && <tr><td colSpan={7} className="text-center py-12 text-[#5a5a6a]">No deals yet. Add your first brand deal!</td></tr>}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {summary?.byType?.length>0 && (
@@ -100,20 +123,20 @@ export default function Deals() {
         <Modal title={edit?'Edit Deal':'New Brand Deal'} onClose={()=>setShow(false)} onSave={handleSave} saving={saving}>
           <div className="space-y-3">
             <div className="form-group"><label className="form-label">Brand Name *</label><input className="input-field" value={form.brandName} onChange={e=>setForm({...form,brandName:e.target.value})} placeholder="e.g. NordVPN" /></div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="form-group"><label className="form-label">Contact Name</label><input className="input-field" value={form.contactName} onChange={e=>setForm({...form,contactName:e.target.value})} /></div>
               <div className="form-group"><label className="form-label">Contact Email</label><input className="input-field" type="email" value={form.contactEmail} onChange={e=>setForm({...form,contactEmail:e.target.value})} /></div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="form-group"><label className="form-label">Deal Type</label><select className="select-field" value={form.dealType} onChange={e=>setForm({...form,dealType:e.target.value})}>{TYPES.map(t=><option key={t}>{t}</option>)}</select></div>
               <div className="form-group"><label className="form-label">Status</label><select className="select-field" value={form.status} onChange={e=>setForm({...form,status:e.target.value})}>{STATUSES.map(s=><option key={s}>{s}</option>)}</select></div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="form-group"><label className="form-label">Value ($)</label><input className="input-field" type="number" min="0" value={form.amount} onChange={e=>setForm({...form,amount:+e.target.value})} /></div>
               <div className="form-group"><label className="form-label">Deadline</label><input className="input-field" type="date" value={form.deadline} onChange={e=>setForm({...form,deadline:e.target.value})} /></div>
             </div>
             <div className="form-group"><label className="form-label">Notes</label><textarea className="textarea-field" rows={2} value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})} /></div>
-            <div className="flex gap-6">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
               <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.isPaid} onChange={e=>setForm({...form,isPaid:e.target.checked})} className="accent-[#7c6ef8]" /><span className="text-[13px]">Marked as Paid</span></label>
               <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.contractSigned} onChange={e=>setForm({...form,contractSigned:e.target.checked})} className="accent-[#4ade80]" /><span className="text-[13px]">Contract Signed</span></label>
             </div>

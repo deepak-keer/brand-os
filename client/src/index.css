@@ -24,10 +24,10 @@
   .glass-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); @apply rounded-2xl p-4 backdrop-blur-sm; }
 
   /* Buttons */
-  .btn-primary { @apply bg-[#7c6ef8] hover:bg-[#6b5de0] text-white font-medium text-[13px] px-4 py-2 rounded-xl transition-all cursor-pointer border-none inline-flex items-center gap-2 active:scale-[0.98]; }
-  .btn-ghost { @apply bg-transparent hover:bg-[#18181f] text-[#9898a8] hover:text-[#e8e8f0] font-medium text-[13px] px-3 py-1.5 rounded-xl transition-all cursor-pointer border border-[#2a2a35] inline-flex items-center gap-1.5; }
-  .btn-danger { @apply bg-[rgba(248,113,113,0.1)] hover:bg-[rgba(248,113,113,0.2)] text-[#f87171] font-medium text-[13px] px-3 py-1.5 rounded-xl transition-all cursor-pointer border border-[rgba(248,113,113,0.2)] inline-flex items-center gap-1.5; }
-  .btn-icon { @apply w-8 h-8 flex items-center justify-center rounded-xl hover:bg-[#18181f] cursor-pointer transition-all text-[#9898a8] hover:text-[#e8e8f0]; }
+  .btn-primary { @apply bg-[#7c6ef8] hover:bg-[#6b5de0] text-white font-medium text-[13px] px-4 min-h-[44px] py-2.5 md:min-h-0 md:py-2 rounded-xl transition-all cursor-pointer border-none inline-flex items-center justify-center gap-2 active:scale-[0.98]; }
+  .btn-ghost { @apply bg-transparent hover:bg-[#18181f] text-[#9898a8] hover:text-[#e8e8f0] font-medium text-[13px] px-3 min-h-[44px] py-2.5 md:min-h-0 md:py-1.5 rounded-xl transition-all cursor-pointer border border-[#2a2a35] inline-flex items-center justify-center gap-1.5; }
+  .btn-danger { @apply bg-[rgba(248,113,113,0.1)] hover:bg-[rgba(248,113,113,0.2)] text-[#f87171] font-medium text-[13px] px-3 min-h-[44px] py-2.5 md:min-h-0 md:py-1.5 rounded-xl transition-all cursor-pointer border border-[rgba(248,113,113,0.2)] inline-flex items-center justify-center gap-1.5; }
+  .btn-icon { @apply min-w-[44px] min-h-[44px] md:min-w-8 md:min-h-8 flex items-center justify-center rounded-xl hover:bg-[#18181f] cursor-pointer transition-all text-[#9898a8] hover:text-[#e8e8f0]; }
 
   /* Inputs */
   .input-field { @apply bg-[#18181f] border border-[#2a2a35] rounded-xl px-3 py-2.5 text-[#e8e8f0] text-[13px] w-full outline-none focus:border-[#7c6ef8] transition-colors placeholder:text-[#3a3a4a]; }
@@ -109,3 +109,10 @@
 .fc-scrollgrid { border-color: #1e1e2a !important; }
 .fc-scrollgrid td, .fc-scrollgrid th { border-color: #1e1e2a !important; }
 .fc-scrollgrid-sync-inner { background: #0f0f16; }
+
+/* FullCalendar list view (mobile week list) */
+.fc-list-event:hover td { background: rgba(124,110,248,0.06) !important; }
+.fc-list-day-cushion, .fc-list-event td { background: #0f0f16 !important; border-color: #1e1e2a !important; color: #e8e8f0 !important; }
+.fc-list-day-text, .fc-list-event-time { color: #9898a8 !important; }
+.fc-theme-standard .fc-list { border-color: #1e1e2a !important; }
+.fc-list-event-graphic { padding-top: 10px !important; }
