@@ -1,23 +1,38 @@
 const nodemailer = require('nodemailer');
 
 const smtpPort = +process.env.SMTP_PORT || 587;
+const smtpHost = process.env.SMTP_HOST;
+const smtpUser = process.env.SMTP_USER;
+const smtpPass = process.env.SMTP_PASS;
+
+const smtpConfigured = Boolean(smtpHost && smtpUser && smtpPass);
+if (!smtpConfigured) {
+  console.warn(
+    '⚠️  SMTP is not fully configured (set SMTP_HOST, SMTP_USER, SMTP_PASS in the environment). Email will fail until these are set — local .env is not deployed to production by default.',
+  );
+}
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
+  host: smtpHost,
   port: smtpPort,
   secure: smtpPort === 465,
+  requireTLS: smtpPort === 587,
   connectionTimeout: 10000,
   greetingTimeout: 10000,
   socketTimeout: 15000,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
+  auth: smtpConfigured
+    ? { user: smtpUser, pass: smtpPass }
+    : undefined,
 });
 
 const sendEmail = async ({ to, subject, html }) => {
+  if (!smtpConfigured) {
+    const err = new Error('SMTP is not configured (missing SMTP_HOST, SMTP_USER, or SMTP_PASS)');
+    console.error('❌ Email send skipped:', err.message);
+    throw err;
+  }
   try {
-    const fromEmail = process.env.FROM_EMAIL || process.env.SMTP_USER;
+    const fromEmail = process.env.FROM_EMAIL || smtpUser;
     await transporter.sendMail({
       from: `"${process.env.FROM_NAME || 'Brand OS'}" <${fromEmail}>`,
       to,
